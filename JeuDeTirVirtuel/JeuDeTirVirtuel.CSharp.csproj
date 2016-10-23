@@ -155,10 +155,12 @@
     <Compile Include="Assets\LeapMotionModules\UIInput\Scripts\Utilities\SliderShadow.cs" />
     <Compile Include="Assets\LeapMotionModules\UIInput\Scripts\Utilities\SliderVolume.cs" />
     <Compile Include="Assets\LeapMotionModules\UIInput\Scripts\Utilities\ToggleToggler.cs" />
+    <Compile Include="Assets\Script\AlienManager.cs" />
     <Compile Include="Assets\Script\GameManager.cs" />
     <Compile Include="Assets\Script\MainMenuActions.cs" />
     <Compile Include="Assets\Script\PlayerHUD.cs" />
     <Compile Include="Assets\Script\PlayerHealth.cs" />
+    <Compile Include="Assets\Utility Classes\RandomTimer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\LeapMotion\Dependencies.txt" />
