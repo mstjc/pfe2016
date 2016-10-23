@@ -40,5 +40,6 @@ public class MainMenuActions : MonoBehaviour {
     {
         gameObject.SetActive(false);
         _HUD.gameObject.SetActive(true);
+        _GM.BeginGame();
     }
 }

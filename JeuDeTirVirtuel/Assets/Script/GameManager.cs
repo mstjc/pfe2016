@@ -4,17 +4,25 @@ using System.Collections;
 public class GameManager : MonoBehaviour {
 
     [SerializeField]
-    private int _numStage = 5;
+    private int _numStage = 1;
     [SerializeField]
-    private int[] _foesPerStage;
+    private int[] _foesPerStage = new int[] { 10 };
     [SerializeField]
-    private float[] _foesSpawnWait;
+    private float[] _foesSpawnWait = new float[] { 3.0f };
     [SerializeField]
     private float _StartOfStageWaitTime = 2f;
 
     private int _currentStage;
     private WaitForSeconds _timeBetweenSpawn;
     private WaitForSeconds _startOfStageWait;
+
+    private string[] _Aliens = new string[] { "alien character" };
+
+    public void BeginGame()
+    {
+        // Start of the game
+        StartCoroutine(StageLoop(0));
+    }
 
     // Use this for initialization
     void Start () {
@@ -23,7 +31,6 @@ public class GameManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
 	}
 
     private IEnumerator StageLoop(int stage)
@@ -32,7 +39,7 @@ public class GameManager : MonoBehaviour {
         yield return StartCoroutine(StagePlaying(stage));
         yield return StartCoroutine(StageEnding(stage));
 
-        if( (stage + 1) == _numStage)
+        if ((stage + 1) == _numStage)
         {
             //Last Stage completed
         }
@@ -40,24 +47,62 @@ public class GameManager : MonoBehaviour {
         {
             StageLoop(++stage);
         }
-}
+    }
 
 
     private IEnumerator StageStarting(int stage)
     {
-        _timeBetweenSpawn = new WaitForSeconds(_foesSpawnWait[stage]);
+        _startOfStageWait = new WaitForSeconds(_StartOfStageWaitTime);
         yield return _startOfStageWait;
     }
 
 
     private IEnumerator StagePlaying(int stage)
     {
-        yield return null;
+        if (_foesPerStage.Length == 0)
+        {
+            Debug.Log("No foes per stage..");
+        }
+        else
+        {
+            int foesForStage = _foesPerStage[stage];
+
+            if (foesForStage > 0)
+            {
+                InstantiateEnnemy();
+            }
+
+            for (int curFoes = 1; curFoes < foesForStage; curFoes++)
+            {
+                _timeBetweenSpawn = new WaitForSeconds(_foesSpawnWait[stage]);
+                yield return _timeBetweenSpawn;
+                InstantiateEnnemy();
+            }
+        }
     }
 
 
     private IEnumerator StageEnding(int stage)
     {
         yield return null;
+    }
+
+    private void InstantiateEnnemy()
+    {
+        var radAngleRange = 30.0f * Mathf.Deg2Rad;
+        var radHorizon = 180.0f * Mathf.Deg2Rad;
+        var angle = Random.Range(-radAngleRange, radAngleRange + radHorizon);
+        var x = 40 * Mathf.Cos(angle);
+        var z = 40 * Mathf.Sin(angle);
+
+        var alienIndex = Random.Range(0, _Aliens.Length - 1);
+        var player = GameObject.Find("Player");
+        var alien = Instantiate(Resources.Load(_Aliens[alienIndex]), new Vector3(x, 0, z), Quaternion.identity) as GameObject;
+        var alienScript = alien.GetComponent(typeof(AlienManager)) as AlienManager;
+
+        if(alienScript != null)
+        {
+            alienScript._Target= player.transform;
+        }
     }
 }

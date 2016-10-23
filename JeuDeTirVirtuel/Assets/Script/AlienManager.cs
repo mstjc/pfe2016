@@ -33,7 +33,7 @@ public class AlienManager : MonoBehaviour {
     private int _Strength = 5;
 
     [SerializeField]
-    private Transform _Target;
+    public Transform _Target;
 
     #endregion
 
@@ -127,7 +127,7 @@ public class AlienManager : MonoBehaviour {
     private bool CanMoveForward()
     {
         var distanceFromTarget = Vector3.Distance(transform.position, _Target.transform.position);
-        return distanceFromTarget > _MinDistanceFromTarget;
+        return distanceFromTarget > _MinDistanceFromTarget && _CurrentHealth > 0.0f;
     }
 
     private bool HasCollision()
