@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour {
     private WaitForSeconds _timeBetweenSpawn;
     private WaitForSeconds _startOfStageWait;
 
-    private string[] _Aliens = new string[] { "alien character" };
+    private string[] _Aliens = new string[] { "alien character", "monster1", "skeleton" };
 
     public void BeginGame()
     {
@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour {
     // Use this for initialization
     void Start () {
         _startOfStageWait = new WaitForSeconds(_StartOfStageWaitTime);
+        BeginGame();
     }
 	
 	// Update is called once per frame
@@ -95,7 +96,7 @@ public class GameManager : MonoBehaviour {
         var x = 40 * Mathf.Cos(angle);
         var z = 40 * Mathf.Sin(angle);
 
-        var alienIndex = Random.Range(0, _Aliens.Length - 1);
+        var alienIndex = Random.Range(0, _Aliens.Length);
         var player = GameObject.Find("Player");
         var alien = Instantiate(Resources.Load(_Aliens[alienIndex]), new Vector3(x, 0, z), Quaternion.identity) as GameObject;
         var alienScript = alien.GetComponent(typeof(AlienManager)) as AlienManager;

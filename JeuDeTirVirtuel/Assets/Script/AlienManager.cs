@@ -26,6 +26,9 @@ public class AlienManager : MonoBehaviour {
     [SerializeField]
     private float _MaxIntervalWalk = 5.0f;
 
+    [SerializeField]
+    private float _ShootingTime = 1.0f;
+
     // Strength from 1 to 100
     //   1 : One shot kill
     // 100 : One hundred shots to kill
@@ -109,12 +112,6 @@ public class AlienManager : MonoBehaviour {
         _anim.SetBool("BeenHit", _BeenHit);
         _anim.SetFloat("Health", _CurrentHealth);
 
-        if(!_ShootTimer.Started)
-        {
-            _ShootTimer.StartTimer();
-            _Firing = false;
-        }
-
         if (!_WalkTimer.Started)
             _WalkTimer.StartTimer();
     }
@@ -127,7 +124,7 @@ public class AlienManager : MonoBehaviour {
     private bool CanMoveForward()
     {
         var distanceFromTarget = Vector3.Distance(transform.position, _Target.transform.position);
-        return distanceFromTarget > _MinDistanceFromTarget && _CurrentHealth > 0.0f;
+        return distanceFromTarget > _MinDistanceFromTarget && _CurrentHealth > 0.0f && !_Firing;
     }
 
     private bool HasCollision()
@@ -142,7 +139,7 @@ public class AlienManager : MonoBehaviour {
         if (_Target != null)
         {
             transform.LookAt(_Target);
-            transform.position = new Vector3(transform.position.x, _Target.position.y + 0.5f, transform.position.z);
+            transform.position = new Vector3(transform.position.x, /*_Target.position.y*/4.0f, transform.position.z);
 
             var rotationVector = transform.rotation.eulerAngles;
             rotationVector.x = 0;
@@ -166,6 +163,18 @@ public class AlienManager : MonoBehaviour {
         float strength = _Strength;
         _CurrentHealth -= 100.0f / (strength > 0 ? strength : 1);
         _BeenHit = false;
+    }
+
+    private IEnumerator UpdateShooting(float time)
+    {
+        yield return new WaitForSeconds(time);
+
+        if (!_ShootTimer.Started)
+        {
+            _ShootTimer.StartTimer();
+        }
+
+        _Firing = false;
     }
 
     private void UpdateMovement()
@@ -200,7 +209,10 @@ public class AlienManager : MonoBehaviour {
 
     private void OnShootTimerTick()
     {
+        _Forward = false;
+        _CurrentSpeed = 0.0f;
         _Firing = true;
+        StartCoroutine(UpdateShooting(_ShootingTime));
     }
 
     private void OnWalkTimerTick()
