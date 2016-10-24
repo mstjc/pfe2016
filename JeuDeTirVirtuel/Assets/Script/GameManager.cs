@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour {
     private WaitForSeconds _timeBetweenSpawn;
     private WaitForSeconds _startOfStageWait;
 
-    private string[] _Aliens = new string[] { "alien character", "monster1", "skeleton" };
+    private string[] _Aliens = new string[] { "monster1", "monster2", "monster3", "skeleton" };
 
     public void BeginGame()
     {
@@ -99,7 +99,7 @@ public class GameManager : MonoBehaviour {
         var alienIndex = Random.Range(0, _Aliens.Length);
         var player = GameObject.Find("Player");
         var alien = Instantiate(Resources.Load(_Aliens[alienIndex]), new Vector3(x, 0, z), Quaternion.identity) as GameObject;
-        var alienScript = alien.GetComponent(typeof(AlienManager)) as AlienManager;
+        var alienScript = alien.GetComponent(typeof(MonsterManager)) as MonsterManager;
 
         if(alienScript != null)
         {
