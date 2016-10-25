@@ -21,13 +21,13 @@ public class MonsterManager : MonoBehaviour {
     private float _MaxIntervalShot = 5.0f;
 
     [SerializeField]
-    private float _MinIntervalWalk = 3.0f;
-
-    [SerializeField]
-    private float _MaxIntervalWalk = 5.0f;
-
-    [SerializeField]
     private float _ShootingTime = 1.0f;
+
+    [SerializeField]
+    private MovementEnum _MovementType;
+
+    [SerializeField]
+    private IMovement _Movement;
 
     // Strength from 1 to 100
     //   1 : One shot kill
@@ -36,7 +36,7 @@ public class MonsterManager : MonoBehaviour {
     private int _Strength = 5;
 
     [SerializeField]
-    public Transform _Target;
+    public GameObject _Target;
 
     #endregion
 
@@ -44,14 +44,11 @@ public class MonsterManager : MonoBehaviour {
 
     Animator _anim;
     private bool _BeenHit = false;
-    private float _CurrentSpeed = 0.0f;
     private float _CurrentHealth;
     private bool _Firing = false;
-    private bool _Forward = false;
     private Rigidbody _RigidBody;
 
     private RandomTimer _ShootTimer;
-    private RandomTimer _WalkTimer;
 
     #endregion
 
@@ -60,6 +57,8 @@ public class MonsterManager : MonoBehaviour {
     private void Awake()
     {
         _RigidBody = GetComponent<Rigidbody>();
+
+        _Movement = MonsterFactory.CreateMovement(_MovementType);
     }
 
     private void OnEnable()
@@ -72,80 +71,57 @@ public class MonsterManager : MonoBehaviour {
         _RigidBody.isKinematic = true;
 
         _ShootTimer.OnTimerTick -= OnShootTimerTick;
-        _WalkTimer.OnTimerTick -= OnWalkTimerTick;
+        _Movement.Disable();
 
         _ShootTimer.StopTimer();
-        _WalkTimer.StopTimer();
     }
 
 	// Use this for initialization
 	void Start () {
         _anim = GetComponent<Animator>();
-        InitPositionAndRotation();
 
         _CurrentHealth = _MaximumHealth;
 
         _ShootTimer = new RandomTimer(_MinIntervalShot, _MaxIntervalShot);
-        _WalkTimer = new RandomTimer(_MinIntervalWalk, _MaxIntervalWalk);
 
         _ShootTimer.OnTimerTick += OnShootTimerTick;
-        _WalkTimer.OnTimerTick += OnWalkTimerTick;
 
         _ShootTimer.StartTimer();
-        _WalkTimer.StartTimer();
+
+        _Movement.InitializeValues(transform.root.gameObject, _Target, _MinDistanceFromTarget);
+        _Movement.Enable();
     }
 	
 	// Update is called once per frame
 	void Update () {
 
         _ShootTimer.Update(Time.deltaTime);
-        _WalkTimer.Update(Time.deltaTime);
+
 
         UpdateHit();
-        UpdateMovement();
+
+        if (!_BeenHit && !_Firing && _CurrentHealth > 0.0f)
+            _Movement.Move(Time.deltaTime);
 	}
 
     void FixedUpdate()
     {
-        _anim.SetFloat("Speed", _Forward ? 1.0f : 0.0f);
+        
         _anim.SetBool("Shooting", _Firing);
         _anim.SetBool("BeenHit", _BeenHit);
         _anim.SetFloat("Health", _CurrentHealth);
 
-        if (!_WalkTimer.Started)
-            _WalkTimer.StartTimer();
+        _Movement.UpdateAnimation();
     }
 
     #endregion
 
     #region Private Methods
 
-    // Indicates if we can still move forward, or we are at too close to the player.
-    private bool CanMoveForward()
-    {
-        var distanceFromTarget = Vector3.Distance(transform.position, _Target.transform.position);
-        return distanceFromTarget > _MinDistanceFromTarget && _CurrentHealth > 0.0f && !_Firing;
-    }
-
     private bool HasCollision()
     {
         // TODO real collision with collider
         return Input.GetKeyDown(KeyCode.Space);
-    }
-
-    // Look at the target and set the current position and rotation so we move toward it.
-    private void InitPositionAndRotation()
-    {
-        if (_Target != null)
-        {
-            transform.LookAt(_Target);
-            transform.position = new Vector3(transform.position.x, /*_Target.position.y*/4.0f, transform.position.z);
-
-            var rotationVector = transform.rotation.eulerAngles;
-            rotationVector.x = 0;
-
-            transform.rotation = Quaternion.Euler(rotationVector);
-        }
     }
 
     private void UpdateHit()
@@ -177,47 +153,14 @@ public class MonsterManager : MonoBehaviour {
         _Firing = false;
     }
 
-    private void UpdateMovement()
-    {
-        if (CanMoveForward())
-        {
-            if (!_Forward)
-            {
-                _CurrentSpeed = _ForwardSpeed;
-            }
-            else if (Input.GetKeyUp(KeyCode.W))
-            {
-                _CurrentSpeed = 0.0f;
-            }
-
-            if (_Forward)
-            {
-                transform.position += transform.forward * _CurrentSpeed * Time.deltaTime;
-            }
-        }
-        else
-        {
-            _Forward = false;
-            _CurrentSpeed = 0.0f;
-        }
-
-    }
-
     #endregion
 
     #region Event Handlers
 
     private void OnShootTimerTick()
     {
-        _Forward = false;
-        _CurrentSpeed = 0.0f;
         _Firing = true;
         StartCoroutine(UpdateShooting(_ShootingTime));
-    }
-
-    private void OnWalkTimerTick()
-    {
-        _Forward = !_Forward;
     }
 
     #endregion

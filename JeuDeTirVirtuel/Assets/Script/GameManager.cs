@@ -106,7 +106,7 @@ public class GameManager : MonoBehaviour {
 
         if(alienScript != null)
         {
-            alienScript._Target= _Player.transform;
+            alienScript._Target= _Player;
         }
     }
 }

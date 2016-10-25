@@ -163,7 +163,13 @@
     <Compile Include="Assets\Script\PlayerHUD.cs" />
     <Compile Include="Assets\Script\PlayerHealth.cs" />
     <Compile Include="Assets\Script\Shield.cs" />
+    <Compile Include="Assets\Utility Classes\IMovement.cs" />
+    <Compile Include="Assets\Utility Classes\MonsterFactory.cs" />
+    <Compile Include="Assets\Utility Classes\MovementEnum.cs" />
     <Compile Include="Assets\Utility Classes\RandomTimer.cs" />
+    <Compile Include="Assets\Utility Classes\StandingMovement.cs" />
+    <Compile Include="Assets\Utility Classes\StraightFastMovement.cs" />
+    <Compile Include="Assets\Utility Classes\StraightMovement.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Ennemies\Monster2\Shaders\bumpspecmap.shader" />
