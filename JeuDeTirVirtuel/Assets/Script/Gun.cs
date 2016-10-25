@@ -3,9 +3,12 @@ using System.Collections;
 
 public class Gun : MonoBehaviour {
 
+    [SerializeField]
+    private GameObject _Palm;
+
     void Awake()
     {
-        gameObject.SetActive(false);
+        //gameObject.SetActive(false);
     }
 
     // Use this for initialization
@@ -14,7 +17,9 @@ public class Gun : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-	
+	void Update ()
+    {
+        gameObject.transform.eulerAngles = new Vector3(0, 90, 0);
+        gameObject.transform.position = _Palm.transform.position;
 	}
 }
