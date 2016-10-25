@@ -12,11 +12,15 @@ public class GameManager : MonoBehaviour {
     [SerializeField]
     private float _StartOfStageWaitTime = 2f;
 
+    [SerializeField]
+    private GameObject _Player;
+
+    [SerializeField]
+    private GameObject[] _Aliens;
+
     private int _currentStage;
     private WaitForSeconds _timeBetweenSpawn;
     private WaitForSeconds _startOfStageWait;
-
-    private string[] _Aliens = new string[] { "monster1", "monster2", "monster3", "skeleton" };
 
     public void BeginGame()
     {
@@ -97,13 +101,12 @@ public class GameManager : MonoBehaviour {
         var z = 40 * Mathf.Sin(angle);
 
         var alienIndex = Random.Range(0, _Aliens.Length);
-        var player = GameObject.Find("Player");
-        var alien = Instantiate(Resources.Load(_Aliens[alienIndex]), new Vector3(x, 0, z), Quaternion.identity) as GameObject;
+        var alien = Instantiate(_Aliens[alienIndex], new Vector3(x, 0, z), Quaternion.identity) as GameObject;
         var alienScript = alien.GetComponent(typeof(MonsterManager)) as MonsterManager;
 
         if(alienScript != null)
         {
-            alienScript._Target= player.transform;
+            alienScript._Target= _Player.transform;
         }
     }
 }
