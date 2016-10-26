@@ -4,7 +4,7 @@ using System.Collections;
 public class Shield : MonoBehaviour {
 
     [SerializeField]
-    private GameObject _Hand;
+    private GameObject _Palm;
 
     void Awake()
     {
@@ -17,7 +17,8 @@ public class Shield : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-	
-	}
+	void Update ()
+    {
+        gameObject.transform.position = _Palm.transform.position;
+    }
 }

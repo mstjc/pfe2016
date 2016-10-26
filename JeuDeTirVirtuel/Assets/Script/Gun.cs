@@ -8,7 +8,7 @@ public class Gun : MonoBehaviour {
 
     void Awake()
     {
-        //gameObject.SetActive(false);
+        gameObject.SetActive(false);
     }
 
     // Use this for initialization
