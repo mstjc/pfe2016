@@ -5,8 +5,6 @@ using System;
 public class MonsterManager : MonoBehaviour {
 
     #region SerializedFields
-    [SerializeField]
-    private float _ForwardSpeed = 1.0f;
 
     [SerializeField]
     private float _MaximumHealth = 100;
@@ -15,19 +13,13 @@ public class MonsterManager : MonoBehaviour {
     private float _MinDistanceFromTarget = 5.0f;
 
     [SerializeField]
-    private float _MinIntervalShot = 3.0f;
-
-    [SerializeField]
-    private float _MaxIntervalShot = 5.0f;
-
-    [SerializeField]
-    private float _ShootingTime = 1.0f;
-
-    [SerializeField]
     private MovementEnum _MovementType;
 
     [SerializeField]
     private IMovement _Movement;
+
+    //[SerializeField]
+    private IShooter _Shooter;
 
     // Strength from 1 to 100
     //   1 : One shot kill
@@ -45,10 +37,7 @@ public class MonsterManager : MonoBehaviour {
     Animator _anim;
     private bool _BeenHit = false;
     private float _CurrentHealth;
-    private bool _Firing = false;
     private Rigidbody _RigidBody;
-
-    private RandomTimer _ShootTimer;
 
     #endregion
 
@@ -59,6 +48,7 @@ public class MonsterManager : MonoBehaviour {
         _RigidBody = GetComponent<Rigidbody>();
 
         _Movement = MonsterFactory.CreateMovement(_MovementType);
+        _Shooter = GetComponent(typeof(IShooter)) as IShooter;
     }
 
     private void OnEnable()
@@ -70,10 +60,8 @@ public class MonsterManager : MonoBehaviour {
     {
         _RigidBody.isKinematic = true;
 
-        _ShootTimer.OnTimerTick -= OnShootTimerTick;
-        _Movement.Disable();
 
-        _ShootTimer.StopTimer();
+        _Movement.Disable();
     }
 
 	// Use this for initialization
@@ -82,12 +70,6 @@ public class MonsterManager : MonoBehaviour {
 
         _CurrentHealth = _MaximumHealth;
 
-        _ShootTimer = new RandomTimer(_MinIntervalShot, _MaxIntervalShot);
-
-        _ShootTimer.OnTimerTick += OnShootTimerTick;
-
-        _ShootTimer.StartTimer();
-
         _Movement.InitializeValues(transform.root.gameObject, _Target, _MinDistanceFromTarget);
         _Movement.Enable();
     }
@@ -95,19 +77,21 @@ public class MonsterManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        _ShootTimer.Update(Time.deltaTime);
-
-
         UpdateHit();
 
-        if (!_BeenHit && !_Firing && _CurrentHealth > 0.0f)
+        var isShooting = false;
+        if(_Shooter != null)
+        {
+            _Shooter.CanShoot = !_BeenHit && _CurrentHealth > 0.0f;
+            isShooting = _Shooter.IsShooting;
+        }
+        if (!_BeenHit && !isShooting && _CurrentHealth > 0.0f)
             _Movement.Move(Time.deltaTime);
 	}
 
     void FixedUpdate()
     {
-        
-        _anim.SetBool("Shooting", _Firing);
+       
         _anim.SetBool("BeenHit", _BeenHit);
         _anim.SetFloat("Health", _CurrentHealth);
 
@@ -139,28 +123,6 @@ public class MonsterManager : MonoBehaviour {
         float strength = _Strength;
         _CurrentHealth -= 100.0f / (strength > 0 ? strength : 1);
         _BeenHit = false;
-    }
-
-    private IEnumerator UpdateShooting(float time)
-    {
-        yield return new WaitForSeconds(time);
-
-        if (!_ShootTimer.Started)
-        {
-            _ShootTimer.StartTimer();
-        }
-
-        _Firing = false;
-    }
-
-    #endregion
-
-    #region Event Handlers
-
-    private void OnShootTimerTick()
-    {
-        _Firing = true;
-        StartCoroutine(UpdateShooting(_ShootingTime));
     }
 
     #endregion

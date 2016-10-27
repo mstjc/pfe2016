@@ -19,7 +19,8 @@ public class Gun : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-        gameObject.transform.eulerAngles = new Vector3(0, 90, 0);
-        gameObject.transform.position = _Palm.transform.position;
+        //var rot = new Vector3(_Palm.transform.eulerAngles.x, _Palm.transform.eulerAngles.y + 90, _Palm.transform.eulerAngles.z);
+        //gameObject.transform.eulerAngles = rot;//new Vector3(0, 90, 0);
+        //gameObject.transform.position = _Palm.transform.position;
 	}
 }
