@@ -25,6 +25,11 @@ public class GameManager : MonoBehaviour {
         StartCoroutine(StageLoop(0));
     }
 
+    public void AbortGame()
+    {
+
+    }
+
     // Use this for initialization
     void Start () {
         _startOfStageWait = new WaitForSeconds(_StartOfStageWaitTime);
