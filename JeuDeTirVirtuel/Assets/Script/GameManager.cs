@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour {
     // Use this for initialization
     void Start () {
         _startOfStageWait = new WaitForSeconds(_StartOfStageWaitTime);
+        BeginGame();
     }
 	
 	// Update is called once per frame
@@ -102,7 +103,7 @@ public class GameManager : MonoBehaviour {
 
         if(alienScript != null)
         {
-            alienScript._Target= _Player;
+            alienScript._Target = _Player;
         }
     }
 

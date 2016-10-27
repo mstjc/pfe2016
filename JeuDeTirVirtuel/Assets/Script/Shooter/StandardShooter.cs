@@ -8,9 +8,6 @@ public class StandardShooter : TimedShooter {
 
     protected override void Start () {
         base.Start();
-        MaxShootingTime = 5.0f;
-        MinShootingTime = 3.0f;
-        ShootingTime = 1.0f;
     }
 
     public override void Shoot(Vector3 direction)

@@ -1,20 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerBullet : MonoBehaviour {
+public class PlayerBullet : BulletBase {
 
-    [SerializeField]
-    private float _Damage = 1f;
     [SerializeField]
     private float _MaxLifeTime = 2f;
 
-    // Use this for initialization
-    void Start ()
+    public override void Start ()
     {
         Destroy(gameObject, _MaxLifeTime);
     }
 
-    private void OnTriggerEnter(Collider other)
+    protected override void OnTriggerEnter(Collider other)
     {
         Rigidbody targetRigidBody = other.GetComponent<Rigidbody>();
 
@@ -26,13 +23,12 @@ public class PlayerBullet : MonoBehaviour {
         if (!targetHealth)
             return;
 
-        targetHealth.TakeDamage(_Damage);
+        targetHealth.TakeDamage(Damage);
 
         Destroy(gameObject);
     }
 
-    // Update is called once per frame
-    void Update () {
+    public override void Update () {
 	
 	}
 }

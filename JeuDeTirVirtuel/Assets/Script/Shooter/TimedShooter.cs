@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class TimedShooter : BaseShooter {
+public class TimedShooter : ShooterBase {
 
     private RandomTimer _ShootTimer;
 
@@ -25,9 +25,6 @@ public class TimedShooter : BaseShooter {
 
     protected override void Start () {
         base.Start();
-        MaxShootingTime = 5.0f;
-        MinShootingTime = 3.0f;
-        ShootingTime = 1.0f;
         _ShootTimer = new RandomTimer(MinShootingTime, MaxShootingTime);
         Enable();
     }
@@ -41,7 +38,6 @@ public class TimedShooter : BaseShooter {
     {
         yield return new WaitForSeconds(time);
 
-        Debug.Log("Shooting");
         if(IsShooting)
             Shoot(transform.forward);
 

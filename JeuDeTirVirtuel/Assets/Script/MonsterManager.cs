@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 using System;
 
 public class MonsterManager : MonoBehaviour {
@@ -9,16 +10,11 @@ public class MonsterManager : MonoBehaviour {
     [SerializeField]
     private float _MaximumHealth = 100;
 
-    [SerializeField]
-    private float _MinDistanceFromTarget = 5.0f;
+    private Slider _Slider;
+    private Image _SliderImage;
 
-    [SerializeField]
-    private MovementEnum _MovementType;
-
-    [SerializeField]
     private IMovement _Movement;
 
-    //[SerializeField]
     private IShooter _Shooter;
 
     // Strength from 1 to 100
@@ -27,7 +23,7 @@ public class MonsterManager : MonoBehaviour {
     [SerializeField]
     private int _Strength = 5;
 
-    [SerializeField]
+    [NonSerialized]
     public GameObject _Target;
 
     #endregion
@@ -48,7 +44,7 @@ public class MonsterManager : MonoBehaviour {
     {
         _RigidBody = GetComponent<Rigidbody>();
 
-        _Movement = MonsterFactory.CreateMovement(_MovementType);
+        _Movement = GetComponent(typeof(IMovement)) as IMovement;
         _Shooter = GetComponent(typeof(IShooter)) as IShooter;
     }
 
@@ -60,19 +56,21 @@ public class MonsterManager : MonoBehaviour {
     private void OnDisable()
     {
         _RigidBody.isKinematic = true;
-
-
-        _Movement.Disable();
     }
 
 	// Use this for initialization
 	void Start () {
         _anim = GetComponent<Animator>();
+        _Slider = GetComponentInChildren<Slider>();
+        FindImage();
+        
+        if(_Movement != null)
+        {
+            _Movement.Target = _Target;
+        }
 
         _CurrentHealth = _MaximumHealth;
-
-        _Movement.InitializeValues(transform.root.gameObject, _Target, _MinDistanceFromTarget);
-        _Movement.Enable();
+        SetHealthUI();
     }
 	
 	// Update is called once per frame
@@ -86,22 +84,38 @@ public class MonsterManager : MonoBehaviour {
             _Shooter.CanShoot = !_BeenHit && _CurrentHealth > 0.0f;
             isShooting = _Shooter.IsShooting;
         }
-        if (!_BeenHit && !isShooting && _CurrentHealth > 0.0f)
-            _Movement.Move(Time.deltaTime);
+
+        if(_Movement != null)
+        {
+            _Movement.CanMove = !_BeenHit && !isShooting && _CurrentHealth > 0.0f;
+        }
 	}
 
     void FixedUpdate()
     {
-       
         _anim.SetBool("BeenHit", _BeenHit);
         _anim.SetFloat("Health", _CurrentHealth);
-
-        _Movement.UpdateAnimation();
     }
 
     #endregion
 
     #region Private Methods
+
+    private void FindImage()
+    {
+        if (_Slider != null)
+        {
+            var children = _Slider.GetComponentsInChildren<Image>();
+            foreach (var child in children)
+            {
+                if (child.name == "Fill")
+                {
+                    _SliderImage = child;
+                    break;
+                }
+            }
+        }
+    }
 
     private bool HasCollision()
     {
@@ -113,42 +127,58 @@ public class MonsterManager : MonoBehaviour {
     {
         if (HasCollision() && _CurrentHealth >= 0 && !_BeenHit)
         {
-            _BeenHit = true;
-            StartCoroutine(UpdateBeenHit(0.2f));
+            //_BeenHit = true;
+            //float strength = _Strength;
+            //_CurrentHealth -= 100.0f / (strength > 0 ? strength : 1);
+            TakeDamage(1);
+            //StartCoroutine(UpdateBeenHit(0.2f));
         }
     }
 
     private IEnumerator UpdateBeenHit(float time)
     {
         yield return new WaitForSeconds(time);
-        float strength = _Strength;
-        _CurrentHealth -= 100.0f / (strength > 0 ? strength : 1);
         _BeenHit = false;
     }
 
     private void SetHealthUI()
     {
-        // Ajuster le slider de vie du monstre
+        if(_Slider != null)
+        {
+            _Slider.value = _CurrentHealth;
+            if (_SliderImage != null)
+            {
+                _SliderImage.color = Color.Lerp(Color.red, Color.green, _CurrentHealth / 100.0f);
+            }
+        }
     }
 
-    private void OnDeath()
+    private IEnumerator OnDeath()
     {
         // Le monstre est mort, on le met mort et on le desactive.
         _IsDead = true;
-        gameObject.SetActive(false);
+        Destroy(_Slider);
+        yield return new WaitForSeconds(2.0f);
+        Destroy(gameObject);
     }
 
     #endregion
 
     public void TakeDamage(float amount)
     {
-        _CurrentHealth -= amount;
+        //_CurrentHealth -= amount;
+        _BeenHit = true;
+
+        float strength = _Strength;
+        _CurrentHealth -= 100.0f / (strength > 0 ? strength * amount : 1);
 
         SetHealthUI();
 
-        if(_CurrentHealth <= 0f && _IsDead)
+        if(_CurrentHealth <= 0f && !_IsDead)
         {
-            OnDeath();
+            StartCoroutine(OnDeath());
         }
+
+        StartCoroutine(UpdateBeenHit(0.2f));
     }
 }

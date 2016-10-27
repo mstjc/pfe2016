@@ -2,17 +2,26 @@
 using System.Collections;
 using System;
 
-public abstract class BaseShooter : MonoBehaviour, IShooter {
-    
+public abstract class ShooterBase : MonoBehaviour, IShooter {
+
+    [SerializeField]
+    private float _MinShootingFreq = 4.0f;
+
+    [SerializeField]
+    private float _MaxShootingFreq = 8.0f;
+
+    [SerializeField]
+    private float _ShootingTime = 1.0f;
+
     public bool CanShoot { get; set; }
 
     public bool IsShooting { get; protected set; }
 
-    public float MaxShootingTime { get; set; }
+    public float MaxShootingTime { get { return _MaxShootingFreq; } set { _MaxShootingFreq = value; } }
 
-    public float MinShootingTime { get; set; }
+    public float MinShootingTime { get { return _MinShootingFreq; } set { _MinShootingFreq = value; } }
 
-    public float ShootingTime { get; set; }
+    public float ShootingTime { get { return _ShootingTime; } set { _ShootingTime = value; } }
 
     protected Animator Anim { get { return _Anim; } }
 
