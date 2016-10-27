@@ -28,7 +28,6 @@ public class GameManager : MonoBehaviour {
     // Use this for initialization
     void Start () {
         _startOfStageWait = new WaitForSeconds(_StartOfStageWaitTime);
-        BeginGame();
     }
 	
 	// Update is called once per frame

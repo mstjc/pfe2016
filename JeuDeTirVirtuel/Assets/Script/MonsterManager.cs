@@ -127,11 +127,7 @@ public class MonsterManager : MonoBehaviour {
     {
         if (HasCollision() && _CurrentHealth >= 0 && !_BeenHit)
         {
-            //_BeenHit = true;
-            //float strength = _Strength;
-            //_CurrentHealth -= 100.0f / (strength > 0 ? strength : 1);
             TakeDamage(1);
-            //StartCoroutine(UpdateBeenHit(0.2f));
         }
     }
 
@@ -157,7 +153,6 @@ public class MonsterManager : MonoBehaviour {
     {
         // Le monstre est mort, on le met mort et on le desactive.
         _IsDead = true;
-        Destroy(_Slider);
         yield return new WaitForSeconds(2.0f);
         Destroy(gameObject);
     }
@@ -166,7 +161,6 @@ public class MonsterManager : MonoBehaviour {
 
     public void TakeDamage(float amount)
     {
-        //_CurrentHealth -= amount;
         _BeenHit = true;
 
         float strength = _Strength;
@@ -174,7 +168,7 @@ public class MonsterManager : MonoBehaviour {
 
         SetHealthUI();
 
-        if(_CurrentHealth <= 0f && !_IsDead)
+        if(_CurrentHealth <= 0.0f && !_IsDead)
         {
             StartCoroutine(OnDeath());
         }
