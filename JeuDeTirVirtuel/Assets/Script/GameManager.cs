@@ -11,14 +11,11 @@ public class GameManager : MonoBehaviour {
     private float[] _foesSpawnWait = new float[] { 3.0f };
     [SerializeField]
     private float _StartOfStageWaitTime = 2f;
-
     [SerializeField]
     private GameObject _Player;
-
     [SerializeField]
     private GameObject[] _Aliens;
 
-    private int _currentStage;
     private WaitForSeconds _timeBetweenSpawn;
     private WaitForSeconds _startOfStageWait;
 
@@ -107,5 +104,10 @@ public class GameManager : MonoBehaviour {
         {
             alienScript._Target= _Player;
         }
+    }
+
+    public static void Reset()
+    {
+
     }
 }

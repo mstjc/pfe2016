@@ -4,21 +4,16 @@ using System.Collections;
 public class Shield : MonoBehaviour {
 
     [SerializeField]
-    private GameObject _Palm;
+    private GameObject _Hand;
 
     void Awake()
     {
         gameObject.SetActive(false);
     }
-
-    // Use this for initialization
-    void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update ()
+    
+    void SetShieldVisibility(bool boolean)
     {
-        gameObject.transform.position = _Palm.transform.position;
+        _Hand.SetActive(!boolean);
+        gameObject.SetActive(boolean);
     }
 }

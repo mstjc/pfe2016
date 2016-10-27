@@ -36,6 +36,7 @@ public class MonsterManager : MonoBehaviour {
 
     Animator _anim;
     private bool _BeenHit = false;
+    private bool _IsDead = false;
     private float _CurrentHealth;
     private Rigidbody _RigidBody;
 
@@ -125,6 +126,29 @@ public class MonsterManager : MonoBehaviour {
         _BeenHit = false;
     }
 
+    private void SetHealthUI()
+    {
+        // Ajuster le slider de vie du monstre
+    }
+
+    private void OnDeath()
+    {
+        // Le monstre est mort, on le met mort et on le desactive.
+        _IsDead = true;
+        gameObject.SetActive(false);
+    }
+
     #endregion
 
+    public void TakeDamage(float amount)
+    {
+        _CurrentHealth -= amount;
+
+        SetHealthUI();
+
+        if(_CurrentHealth <= 0f && _IsDead)
+        {
+            OnDeath();
+        }
+    }
 }

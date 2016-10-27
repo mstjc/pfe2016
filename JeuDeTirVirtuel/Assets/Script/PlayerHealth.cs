@@ -51,7 +51,7 @@ public class PlayerHealth : MonoBehaviour {
     private void OnDeath()
     {
         _Dead = true;
-        gameObject.SetActive(false);
+        GameManager.Reset();
     }
 
     // Use this for initialization
