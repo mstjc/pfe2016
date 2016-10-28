@@ -19,13 +19,13 @@ public class Gun : MonoBehaviour {
         gameObject.SetActive(false);
     }
 
-    void SetGunVisibility(bool boolean)
+    public void SetGunVisibility(bool boolean)
     {
         _Hand.SetActive(!boolean);
         gameObject.SetActive(boolean);
     }
 
-    void Fire()
+    public void Fire()
     {
         if(_IsReloaded)
         {
@@ -37,7 +37,7 @@ public class Gun : MonoBehaviour {
         }
     }
 
-    void Reload()
+    public void Reload()
     {
         _IsReloaded = true;
     }

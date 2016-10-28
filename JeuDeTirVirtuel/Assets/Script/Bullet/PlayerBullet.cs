@@ -20,12 +20,18 @@ public class PlayerBullet : BulletBase {
 
         MonsterManager targetHealth = targetRigidBody.GetComponent<MonsterManager>();
 
-        if (!targetHealth)
-            return;
+        if (targetHealth)
+        {
+            targetHealth.TakeDamage(Damage);
+            Destroy(gameObject);
+        }
 
-        targetHealth.TakeDamage(Damage);
-
-        Destroy(gameObject);
+        MonsterBullet bulletCol = targetRigidBody.GetComponent<MonsterBullet>();
+        if(bulletCol)
+        {
+            Destruct();
+        }
+        
     }
 
     public override void Update () {

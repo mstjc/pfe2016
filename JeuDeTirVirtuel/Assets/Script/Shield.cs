@@ -11,7 +11,7 @@ public class Shield : MonoBehaviour {
         gameObject.SetActive(false);
     }
     
-    void SetShieldVisibility(bool boolean)
+    public void SetShieldVisibility(bool boolean)
     {
         _Hand.SetActive(!boolean);
         gameObject.SetActive(boolean);
