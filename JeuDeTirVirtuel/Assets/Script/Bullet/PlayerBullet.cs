@@ -34,6 +34,12 @@ public class PlayerBullet : BulletBase {
         
     }
 
+    protected override void OnCollisionEnter(Collision collision)
+    {
+        base.OnCollisionEnter(collision);
+        OnTriggerEnter(collision.collider);
+    }
+
     public override void Update () {
 	
 	}

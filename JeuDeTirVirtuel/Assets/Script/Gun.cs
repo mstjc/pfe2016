@@ -27,7 +27,7 @@ public class Gun : MonoBehaviour {
 
     public void Fire()
     {
-        if(_IsReloaded)
+        //if(_IsReloaded)
         {
             _IsReloaded = false;
 
