@@ -13,7 +13,7 @@ public class Shield : MonoBehaviour {
     
     public void SetShieldVisibility(bool boolean)
     {
-        _Hand.SetActive(!boolean);
+        //_Hand.SetActive(!boolean);
         gameObject.SetActive(boolean);
     }
 }

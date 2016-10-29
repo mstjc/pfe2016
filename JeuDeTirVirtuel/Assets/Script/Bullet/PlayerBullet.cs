@@ -13,6 +13,8 @@ public class PlayerBullet : BulletBase {
 
     protected override void OnTriggerEnter(Collider other)
     {
+        base.OnTriggerEnter(other);
+
         Rigidbody targetRigidBody = other.GetComponent<Rigidbody>();
 
         if (!targetRigidBody)
@@ -36,7 +38,7 @@ public class PlayerBullet : BulletBase {
 
     protected override void OnCollisionEnter(Collision collision)
     {
-        base.OnCollisionEnter(collision);
+        //base.OnCollisionEnter(collision);
         OnTriggerEnter(collision.collider);
     }
 

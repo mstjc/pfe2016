@@ -21,7 +21,7 @@ public class Gun : MonoBehaviour {
 
     public void SetGunVisibility(bool boolean)
     {
-        _Hand.SetActive(!boolean);
+        //_Hand.SetActive(!boolean);
         gameObject.SetActive(boolean);
     }
 
