@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
+using System;
+using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour {
 
@@ -15,6 +18,12 @@ public class GameManager : MonoBehaviour {
     private GameObject _Player;
     [SerializeField]
     private GameObject[] _Aliens;
+
+    [SerializeField]
+    private HUDUpdating _HUDUpdating;
+
+    private int _CurrentStage = 0;
+    private int _EnnemiesRemaining = 0;
 
     private WaitForSeconds _timeBetweenSpawn;
     private WaitForSeconds _startOfStageWait;
@@ -41,6 +50,11 @@ public class GameManager : MonoBehaviour {
 
     private IEnumerator StageLoop(int stage)
     {
+        _CurrentStage = stage + 1;
+        _HUDUpdating.UpdateStage(_CurrentStage);
+        _HUDUpdating.UpdateEnnemiesRemaining(_EnnemiesRemaining);
+
+
         yield return StartCoroutine(StageStarting(stage));
         yield return StartCoroutine(StagePlaying(stage));
         yield return StartCoroutine(StageEnding(stage));
@@ -72,6 +86,9 @@ public class GameManager : MonoBehaviour {
         else
         {
             int foesForStage = _foesPerStage[stage];
+
+            _EnnemiesRemaining = foesForStage;
+            _HUDUpdating.UpdateEnnemiesRemaining(_EnnemiesRemaining);
 
             if (foesForStage > 0)
             {
@@ -107,12 +124,24 @@ public class GameManager : MonoBehaviour {
 
         if(alienScript != null)
         {
+            alienScript.Died += OnAlienDead;
             alienScript._Target = _Player;
+        }
+    }
+
+    private void OnAlienDead(object sender, EventArgs e)
+    {
+        MonsterManager script = sender as MonsterManager;
+        if(script != null)
+        {
+            script.Died -= OnAlienDead;
+            --_EnnemiesRemaining;
+            _HUDUpdating.UpdateEnnemiesRemaining(_EnnemiesRemaining);
         }
     }
 
     public static void Reset()
     {
-
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

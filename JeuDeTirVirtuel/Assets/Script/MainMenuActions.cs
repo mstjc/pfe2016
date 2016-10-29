@@ -8,8 +8,6 @@ public class MainMenuActions : MonoBehaviour {
     [SerializeField]
     private Button _MainMenuQuit, _MainMenuTutorial, _MainMenuStart, _LeapBugButton, _ExitButton;
     [SerializeField]
-    private Text _LeapBugText;
-    [SerializeField]
     private GameManager _GM;
     [SerializeField]
     private PlayerHUD _HUD;
@@ -27,10 +25,7 @@ public class MainMenuActions : MonoBehaviour {
 
     private void OnClickExitGame()
     {
-        gameObject.SetActive(true);
-        SetMainMenuVisibility(true);
-        _HUD.gameObject.SetActive(false);
-        _ExitButton.gameObject.SetActive(false);
+        GameManager.Reset();
     }
 
     void Start()
@@ -75,6 +70,5 @@ public class MainMenuActions : MonoBehaviour {
         _MainMenuStart.gameObject.SetActive(boolean);
         _MainMenuTutorial.gameObject.SetActive(boolean);
         _LeapBugButton.gameObject.SetActive(!boolean);
-        _LeapBugText.gameObject.SetActive(!boolean);
     }
 }

@@ -28,6 +28,9 @@ public class MonsterManager : MonoBehaviour {
 
     #endregion
 
+    public event EventHandler Died;
+
+
     #region Fields
 
     Animator _anim;
@@ -153,6 +156,11 @@ public class MonsterManager : MonoBehaviour {
     {
         // Le monstre est mort, on le met mort et on le desactive.
         _IsDead = true;
+        if(Died != null)
+        {
+            Died(this, EventArgs.Empty);
+        }
+
         yield return new WaitForSeconds(2.0f);
         Destroy(gameObject);
     }
