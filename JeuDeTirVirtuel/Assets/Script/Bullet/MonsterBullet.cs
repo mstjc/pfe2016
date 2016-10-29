@@ -15,12 +15,6 @@ public class MonsterBullet : BulletBase {
         if (_Destructing)
             return;
 
-        MonsterManager mm = collision.gameObject.GetComponent<MonsterManager>();
-
-        if (mm != null)
-            return;
-        // if it is not a monster then it has to be a projectile or player which cause a destruct
-
         base.OnCollisionEnter(collision);
 
         var player = collision.gameObject.GetComponent<PlayerHealth>();

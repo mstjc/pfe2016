@@ -31,7 +31,17 @@ public class MainMenuActions : MonoBehaviour {
         SetMainMenuVisibility(true);
         _HUD.gameObject.SetActive(false);
         _ExitButton.gameObject.SetActive(false);
-        _GM.Reset();
+    }
+
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
     }
 
     void OnClickQuit()
