@@ -1,43 +1,44 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class GameManager : MonoBehaviour {
 
     [SerializeField]
-    private int _numStage = 1;
+    private int _NumStage = 1;
     [SerializeField]
-    private int[] _foesPerStage = new int[] { 10 };
+    private int[] _FoesPerStage = new int[] { 10 };
     [SerializeField]
-    private float[] _foesSpawnWait = new float[] { 3.0f };
+    private float[] _FoesSpawnWait = new float[] { 3.0f };
     [SerializeField]
     private float _StartOfStageWaitTime = 2f;
     [SerializeField]
     private GameObject _Player;
     [SerializeField]
     private GameObject[] _Aliens;
+    [SerializeField]
+    private HUDUpdating _HUD;
 
-    private WaitForSeconds _timeBetweenSpawn;
-    private WaitForSeconds _startOfStageWait;
+
+    private WaitForSeconds _TimeBetweenSpawn;
+    private WaitForSeconds _StartOfStageWait;
+    private int _CurrentNumberOfEnnemis;
+    private int _CurrentStage = 1;
 
     public void BeginGame()
     {
         // Start of the game
-        StartCoroutine(StageLoop(0));
-    }
-
-    public void AbortGame()
-    {
-
+        StartCoroutine(StageLoop(_CurrentStage));
     }
 
     // Use this for initialization
-    void Start () {
-        _startOfStageWait = new WaitForSeconds(_StartOfStageWaitTime);
+    void Start() {
+        _StartOfStageWait = new WaitForSeconds(_StartOfStageWaitTime);
     }
-	
-	// Update is called once per frame
-	void Update () {
-	}
+
+    // Update is called once per frame
+    void Update() {
+    }
 
     private IEnumerator StageLoop(int stage)
     {
@@ -45,7 +46,7 @@ public class GameManager : MonoBehaviour {
         yield return StartCoroutine(StagePlaying(stage));
         yield return StartCoroutine(StageEnding(stage));
 
-        if ((stage + 1) == _numStage)
+        if (_CurrentStage == _NumStage)
         {
             //Last Stage completed
         }
@@ -58,20 +59,23 @@ public class GameManager : MonoBehaviour {
 
     private IEnumerator StageStarting(int stage)
     {
-        _startOfStageWait = new WaitForSeconds(_StartOfStageWaitTime);
-        yield return _startOfStageWait;
+        _CurrentStage = stage;
+        _StartOfStageWait = new WaitForSeconds(_StartOfStageWaitTime);
+        _HUD.UpdateStage(_CurrentStage);
+
+        yield return _StartOfStageWait;
     }
 
 
     private IEnumerator StagePlaying(int stage)
     {
-        if (_foesPerStage.Length == 0)
+        if (_FoesPerStage.Length == 0)
         {
             Debug.Log("No foes per stage..");
         }
         else
         {
-            int foesForStage = _foesPerStage[stage];
+            int foesForStage = _FoesPerStage[stage];
 
             if (foesForStage > 0)
             {
@@ -80,8 +84,8 @@ public class GameManager : MonoBehaviour {
 
             for (int curFoes = 1; curFoes < foesForStage; curFoes++)
             {
-                _timeBetweenSpawn = new WaitForSeconds(_foesSpawnWait[stage]);
-                yield return _timeBetweenSpawn;
+                _TimeBetweenSpawn = new WaitForSeconds(_FoesSpawnWait[stage]);
+                yield return _TimeBetweenSpawn;
                 InstantiateEnnemy();
             }
         }
@@ -105,14 +109,23 @@ public class GameManager : MonoBehaviour {
         var alien = Instantiate(_Aliens[alienIndex], new Vector3(x, 0, z), Quaternion.identity) as GameObject;
         var alienScript = alien.GetComponent(typeof(MonsterManager)) as MonsterManager;
 
-        if(alienScript != null)
+        if (alienScript != null)
         {
             alienScript._Target = _Player;
         }
+
+        ++_CurrentNumberOfEnnemis;
+        _HUD.UpdateEnnemis(_CurrentNumberOfEnnemis);
     }
 
-    public static void Reset()
+    public void EnnemiDied()
     {
+        --_CurrentNumberOfEnnemis;
+        _HUD.UpdateEnnemis(_CurrentNumberOfEnnemis);
+    }
 
+    public void Reset()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

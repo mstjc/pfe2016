@@ -14,6 +14,8 @@ public class PlayerHealth : MonoBehaviour {
     private Color _FullHealthColor = Color.green;
     [SerializeField]
     private Color _ZeroHealthColor = Color.red;
+    [SerializeField]
+    private GameManager _GM;
 
     private float _CurrentHealth;
     private bool _Dead;
@@ -51,7 +53,7 @@ public class PlayerHealth : MonoBehaviour {
     private void OnDeath()
     {
         _Dead = true;
-        GameManager.Reset();
+        _GM.Reset();
     }
 
     // Use this for initialization

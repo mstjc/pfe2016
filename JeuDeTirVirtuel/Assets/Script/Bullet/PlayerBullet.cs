@@ -11,9 +11,9 @@ public class PlayerBullet : BulletBase {
         Destroy(gameObject, _MaxLifeTime);
     }
 
-    protected override void OnTriggerEnter(Collider other)
+    protected override void OnCollisionEnter(Collision collision)
     {
-        base.OnTriggerEnter(other);
+        Collider other = collision.collider;
 
         Rigidbody targetRigidBody = other.GetComponent<Rigidbody>();
 
@@ -26,20 +26,18 @@ public class PlayerBullet : BulletBase {
         {
             targetHealth.TakeDamage(Damage);
             Destroy(gameObject);
+            return;
         }
 
         MonsterBullet bulletCol = targetRigidBody.GetComponent<MonsterBullet>();
-        if(bulletCol)
+        if (bulletCol)
         {
             Destruct();
+            return;
         }
-        
-    }
 
-    protected override void OnCollisionEnter(Collision collision)
-    {
-        //base.OnCollisionEnter(collision);
-        OnTriggerEnter(collision.collider);
+        // we must have hit the floor.
+        Destroy(gameObject);
     }
 
     public override void Update () {

@@ -8,7 +8,7 @@ public abstract class BulletBase : MonoBehaviour, IBullet {
     public float Damage { get { return _Damage; } set { _Damage = value; } }
 
     public float _MaxRange = 50.0f;
-    public float _TimeAliveAfterCollision = 2.0f;
+    public float _TimeAliveAfterCollision = 0.75f;
     protected bool _Destructing = false;
 
     public virtual void Start()
@@ -31,12 +31,6 @@ public abstract class BulletBase : MonoBehaviour, IBullet {
     public virtual bool IsLost()
     {
         return Mathf.Abs(transform.position.x) > _MaxRange || Mathf.Abs(transform.position.z) > _MaxRange;
-    }
-
-    protected virtual void OnTriggerEnter(Collider other)
-    {
-        if (GetComponent<Collider>().isTrigger)
-            Destruct(); 
     }
 
     protected virtual void OnCollisionEnter(Collision collision)

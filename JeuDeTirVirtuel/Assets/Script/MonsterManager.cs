@@ -26,6 +26,9 @@ public class MonsterManager : MonoBehaviour {
     [NonSerialized]
     public GameObject _Target;
 
+    [SerializeField]
+    private GameManager _GM;
+
     #endregion
 
     #region Fields
@@ -153,6 +156,7 @@ public class MonsterManager : MonoBehaviour {
     {
         // Le monstre est mort, on le met mort et on le desactive.
         _IsDead = true;
+        _GM.EnnemiDied();
         yield return new WaitForSeconds(2.0f);
         Destroy(gameObject);
     }
