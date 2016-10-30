@@ -27,6 +27,7 @@ public class Gun : MonoBehaviour {
 
     public void Fire()
     {
+        if(gameObject.activeInHierarchy)
         //if(_IsReloaded)
         {
             _IsReloaded = false;
