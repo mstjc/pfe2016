@@ -35,6 +35,14 @@ public class Gun : MonoBehaviour {
             Rigidbody shellInstance = Instantiate(_Shell, _FireDirection.position, _FireDirection.rotation) as Rigidbody;
 
             shellInstance.velocity = _ShellLaunchForce * _FireDirection.forward;
+
+            var particle = GetComponentInChildren<ParticleSystem>();
+            Debug.Log("particle: " + particle);
+            if(particle != null)
+            {
+                particle.Play();
+            }
+
         }
     }
 
