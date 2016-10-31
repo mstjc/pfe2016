@@ -159,6 +159,11 @@
     <Compile Include="Assets\LeapMotionModules\UIInput\Scripts\Utilities\SliderShadow.cs" />
     <Compile Include="Assets\LeapMotionModules\UIInput\Scripts\Utilities\SliderVolume.cs" />
     <Compile Include="Assets\LeapMotionModules\UIInput\Scripts\Utilities\ToggleToggler.cs" />
+    <Compile Include="Assets\OSPNative\scenes\Standard Assets\Character Controllers\Sources\Scripts\MouseLook.cs" />
+    <Compile Include="Assets\OSPNative\scripts\ONSPAudioSource.cs" />
+    <Compile Include="Assets\OSPNative\scripts\ONSPVersion.cs" />
+    <Compile Include="Assets\OSPNative\scripts\helpers\ONSPReflectionZone.cs" />
+    <Compile Include="Assets\SciFi Gun\Script\GunSoundManager.cs" />
     <Compile Include="Assets\Script\BlinkingLeapBugText.cs" />
     <Compile Include="Assets\Script\Bullet\BulletBase.cs" />
     <Compile Include="Assets\Script\Bullet\IBullet.cs" />
@@ -170,6 +175,7 @@
     <Compile Include="Assets\Script\LeapActions.cs" />
     <Compile Include="Assets\Script\MainMenuActions.cs" />
     <Compile Include="Assets\Script\MonsterManager.cs" />
+    <Compile Include="Assets\Script\MonsterSoundManager.cs" />
     <Compile Include="Assets\Script\Movement\IMovement.cs" />
     <Compile Include="Assets\Script\Movement\MovementBase.cs" />
     <Compile Include="Assets\Script\Movement\StandingMovement.cs" />

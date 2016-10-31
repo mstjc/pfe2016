@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System;
 
 public interface IShooter {
+
+    event EventHandler Fired;
+
     bool CanShoot { get; set; }
     bool IsShooting { get; }
     float MinShootingTime { get; set; }

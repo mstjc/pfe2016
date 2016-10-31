@@ -126,6 +126,8 @@
     <Compile Include="Assets\LeapMotionModules\Hands\Scripts\Editor\LeapHandsAutoRigEditor.cs" />
     <Compile Include="Assets\LeapMotionModules\UIInput\Editor\CompressibleUIEditor.cs" />
     <Compile Include="Assets\LeapMotionModules\UIInput\Editor\LeapInputModuleEditor.cs" />
+    <Compile Include="Assets\OSPNative\editor\ONSPAudioSourceEditor.cs" />
+    <Compile Include="Assets\OSPNative\editor\ONSPReflectionCustomGUI.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Ennemies\Monster2\Shaders\bumpspecmap.shader" />

@@ -28,6 +28,8 @@ public abstract class ShooterBase : MonoBehaviour, IShooter {
 
     private Animator _Anim;
 
+    public event EventHandler Fired;
+
     // Use this for initialization
     protected virtual void Start () {
         _Anim = GetComponent<Animator>();
@@ -45,6 +47,15 @@ public abstract class ShooterBase : MonoBehaviour, IShooter {
 
     public virtual void Shoot(Vector3 direction)
     {
+        OnFired();
         // empty
+    }
+
+    public void OnFired()
+    {
+        if (Fired != null)
+        {
+            Fired(this, EventArgs.Empty);
+        }
     }
 }

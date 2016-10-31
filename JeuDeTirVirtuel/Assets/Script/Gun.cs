@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class Gun : MonoBehaviour {
 
@@ -11,6 +12,8 @@ public class Gun : MonoBehaviour {
     private Transform _FireDirection;
     [SerializeField]
     private float _ShellLaunchForce;
+
+    public event EventHandler Fired;
 
     private bool _IsReloaded = false;
 
@@ -43,8 +46,19 @@ public class Gun : MonoBehaviour {
                 particle.Play();
             }
 
+            OnFired();
+
         }
     }
+
+    private void OnFired()
+    {
+        if(Fired != null)
+        {
+            Fired(this, EventArgs.Empty);
+        }
+    }
+
 
     public void Reload()
     {

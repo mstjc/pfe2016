@@ -20,6 +20,7 @@ public class TimedShooter : ShooterBase {
     private void OnShootTimerTick()
     {
         IsShooting = true;
+        OnFired();
         StartCoroutine(UpdateShooting(ShootingTime));
     }
 
@@ -47,5 +48,10 @@ public class TimedShooter : ShooterBase {
         }
 
         IsShooting = false;
+    }
+
+    public override void Shoot(Vector3 position)
+    {
+
     }
 }

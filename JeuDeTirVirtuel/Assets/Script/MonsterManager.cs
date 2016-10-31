@@ -28,6 +28,9 @@ public class MonsterManager : MonoBehaviour {
 
     #endregion
 
+    public event EventHandler Born;
+    public event EventHandler Hit;
+    public event EventHandler Attack;
     public event EventHandler Died;
 
 
@@ -49,6 +52,10 @@ public class MonsterManager : MonoBehaviour {
 
         _Movement = GetComponent(typeof(IMovement)) as IMovement;
         _Shooter = GetComponent(typeof(IShooter)) as IShooter;
+        if(_Shooter != null)
+        {
+            _Shooter.Fired += OnFired;
+        }
     }
 
     private void OnEnable()
@@ -59,6 +66,10 @@ public class MonsterManager : MonoBehaviour {
     private void OnDisable()
     {
         _RigidBody.isKinematic = true;
+        if(_Shooter != null)
+        {
+            _Shooter.Fired -= OnFired;
+        }
     }
 
 	// Use this for initialization
@@ -66,6 +77,7 @@ public class MonsterManager : MonoBehaviour {
         _anim = GetComponent<Animator>();
         _Slider = GetComponentInChildren<Slider>();
         FindImage();
+        OnBorn();
         
         if(_Movement != null)
         {
@@ -165,6 +177,35 @@ public class MonsterManager : MonoBehaviour {
         Destroy(gameObject);
     }
 
+    private void OnBorn()
+    {
+        if(Born != null)
+        {
+            Born(this, EventArgs.Empty);
+        }
+    }
+
+    private void OnHit()
+    {
+        if (Hit != null)
+        {
+            Hit(this, EventArgs.Empty);
+        }
+    }
+
+    private void OnFired(object sender, EventArgs e)
+    {
+        OnAttack();
+    }
+
+    private void OnAttack()
+    {
+        if (Attack != null)
+        {
+            Attack(this, EventArgs.Empty);
+        }
+    }
+
     #endregion
 
     public void TakeDamage(float amount)
@@ -180,6 +221,8 @@ public class MonsterManager : MonoBehaviour {
         {
             StartCoroutine(OnDeath());
         }
+
+        OnHit();
 
         StartCoroutine(UpdateBeenHit(0.2f));
     }
