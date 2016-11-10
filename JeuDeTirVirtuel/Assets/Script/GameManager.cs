@@ -52,7 +52,7 @@ public class GameManager : MonoBehaviour {
     {
         _CurrentStage = stage + 1;
         _HUDUpdating.UpdateStage(_CurrentStage);
-        _HUDUpdating.UpdateEnnemiesRemaining(_EnnemiesRemaining);
+        //_HUDUpdating.UpdateEnnemiesRemaining(_EnnemiesRemaining);
 
 
         yield return StartCoroutine(StageStarting(stage));
@@ -73,6 +73,7 @@ public class GameManager : MonoBehaviour {
     private IEnumerator StageStarting(int stage)
     {
         _startOfStageWait = new WaitForSeconds(_StartOfStageWaitTime);
+        _timeBetweenSpawn = new WaitForSeconds(_foesSpawnWait[stage]);
         yield return _startOfStageWait;
     }
 
@@ -97,7 +98,6 @@ public class GameManager : MonoBehaviour {
 
             for (int curFoes = 1; curFoes < foesForStage; curFoes++)
             {
-                _timeBetweenSpawn = new WaitForSeconds(_foesSpawnWait[stage]);
                 yield return _timeBetweenSpawn;
                 InstantiateEnnemy();
             }
@@ -107,6 +107,11 @@ public class GameManager : MonoBehaviour {
 
     private IEnumerator StageEnding(int stage)
     {
+        while(_EnnemiesRemaining > 0)
+        {
+            // waiting for all enemies to be defeated.
+        }
+
         yield return null;
     }
 
