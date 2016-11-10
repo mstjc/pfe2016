@@ -53,37 +53,40 @@ public class Gun : MonoBehaviour {
 
     public void Fire()
     {
-        if(gameObject.activeInHierarchy && !_IsReloading && _IsReloaded)
+        if(gameObject.activeInHierarchy)
         {
-            Rigidbody shellInstance = Instantiate(_Shell, _FireDirection.position, _FireDirection.rotation) as Rigidbody;
-
-            shellInstance.velocity = _ShellLaunchForce * _FireDirection.forward;
-
-            var particle = GetComponentInChildren<ParticleSystem>();
-            if(particle != null)
+            if (!_IsReloading && _IsReloaded)
             {
-                particle.Play();
-            }
+                Rigidbody shellInstance = Instantiate(_Shell, _FireDirection.position, _FireDirection.rotation) as Rigidbody;
 
-            if(_Animator != null && !_IsReloading)
+                shellInstance.velocity = _ShellLaunchForce * _FireDirection.forward;
+
+                var particle = GetComponentInChildren<ParticleSystem>();
+                if (particle != null)
+                {
+                    particle.Play();
+                }
+
+                if (_Animator != null && !_IsReloading)
+                {
+                    _Animator.SetTrigger("Shoot");
+                }
+
+                OnFired();
+
+                // TODO
+                //_NbBullets--;
+                if (_NbBullets <= 0)
+                {
+                    _IsReloaded = false;
+                }
+
+            }
+            else
             {
-                _Animator.SetTrigger("Shoot");
+                OnTick();
+                Reload();
             }
-
-            OnFired();
-
-            // TODO
-            //_NbBullets--;
-            if (_NbBullets <= 0)
-            {
-                _IsReloaded = false;
-            }
-
-        }
-        else
-        {
-            OnTick();
-            Reload();
         }
     }
 
