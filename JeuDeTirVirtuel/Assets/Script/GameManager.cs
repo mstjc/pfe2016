@@ -110,9 +110,8 @@ public class GameManager : MonoBehaviour {
         while(_EnnemiesRemaining > 0)
         {
             // waiting for all enemies to be defeated.
+            yield return null;
         }
-
-        yield return null;
     }
 
     private void InstantiateEnnemy()
