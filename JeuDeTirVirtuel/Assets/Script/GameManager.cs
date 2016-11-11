@@ -65,7 +65,7 @@ public class GameManager : MonoBehaviour {
         }
         else
         {
-            StageLoop(++stage);
+            StartCoroutine(StageLoop(++stage));
         }
     }
 
