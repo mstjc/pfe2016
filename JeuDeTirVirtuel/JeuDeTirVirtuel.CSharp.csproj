@@ -175,6 +175,7 @@
     <Compile Include="Assets\Script\MainMenuActions.cs" />
     <Compile Include="Assets\Script\MonsterManager.cs" />
     <Compile Include="Assets\Script\MonsterSoundManager.cs" />
+    <Compile Include="Assets\Script\Movement\ArcMovement.cs" />
     <Compile Include="Assets\Script\Movement\IMovement.cs" />
     <Compile Include="Assets\Script\Movement\MovementBase.cs" />
     <Compile Include="Assets\Script\Movement\StandingMovement.cs" />
