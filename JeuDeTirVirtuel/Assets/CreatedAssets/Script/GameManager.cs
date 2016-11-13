@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour {
     [SerializeField]
     private float[] _foesSpawnWait = new float[] { 3.0f };
     [SerializeField]
+    private float _FOVAngleDeg = 180F;
+    [SerializeField]
     private float _StartOfStageWaitTime = 2f;
     [SerializeField]
     private GameObject _Player;
@@ -117,8 +119,9 @@ public class GameManager : MonoBehaviour {
 
     private void InstantiateEnnemy()
     {
-        var radAngleRange = 30.0f * Mathf.Deg2Rad;
-        var radHorizon = 180.0f * Mathf.Deg2Rad;
+        float horizon = 180F;
+        var radAngleRange = ((_FOVAngleDeg - horizon) /2) * Mathf.Deg2Rad;
+        var radHorizon = horizon * Mathf.Deg2Rad;
         var angle = Random.Range(-radAngleRange, radAngleRange + radHorizon);
         var x = 40 * Mathf.Cos(angle);
         var z = 40 * Mathf.Sin(angle);
