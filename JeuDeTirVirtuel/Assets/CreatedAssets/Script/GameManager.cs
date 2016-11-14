@@ -20,9 +20,12 @@ public class GameManager : MonoBehaviour {
     private GameObject _Player;
     [SerializeField]
     private GameObject[] _Aliens;
-
     [SerializeField]
     private HUDUpdating _HUDUpdating;
+    [SerializeField]
+    private DetectorEnablingScript _RightHandDetectors;
+    [SerializeField]
+    private DetectorEnablingScript _LeftHandDetectors;
 
     private int _CurrentStage = 0;
     private int _EnnemiesRemaining = 0;
@@ -34,6 +37,15 @@ public class GameManager : MonoBehaviour {
     {
         // Start of the game
         StartCoroutine(StageLoop(0));
+        _RightHandDetectors.EnableDetectors();
+        _LeftHandDetectors.EnableDetectors();
+    }
+
+    public void BeginTutorial()
+    {
+        // Start of the tutorial
+        _RightHandDetectors.EnableDetectors();
+        _LeftHandDetectors.EnableDetectors();
     }
 
     public void AbortGame()
@@ -44,12 +56,9 @@ public class GameManager : MonoBehaviour {
     // Use this for initialization
     void Start () {
         _startOfStageWait = new WaitForSeconds(_StartOfStageWaitTime);
-        BeginGame();
+        _RightHandDetectors.DisableDetectors();
+        _LeftHandDetectors.DisableDetectors();
     }
-	
-	// Update is called once per frame
-	void Update () {
-	}
 
     private IEnumerator StageLoop(int stage)
     {

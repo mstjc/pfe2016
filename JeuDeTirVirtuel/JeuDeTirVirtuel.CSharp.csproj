@@ -75,6 +75,7 @@
     <Compile Include="Assets\CreatedAssets\Script\ArcMovement.cs" />
     <Compile Include="Assets\CreatedAssets\Script\BlinkingLeapBugText.cs" />
     <Compile Include="Assets\CreatedAssets\Script\BulletBase.cs" />
+    <Compile Include="Assets\CreatedAssets\Script\DetectorEnablingScript.cs" />
     <Compile Include="Assets\CreatedAssets\Script\FrontPanelActions.cs" />
     <Compile Include="Assets\CreatedAssets\Script\GameManager.cs" />
     <Compile Include="Assets\CreatedAssets\Script\Gun.cs" />
