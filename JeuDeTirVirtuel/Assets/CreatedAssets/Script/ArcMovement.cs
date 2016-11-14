@@ -110,24 +110,46 @@ public class ArcMovement : MovementBase
             if (_Moving)
             {
                 // We check the position at each frame. if it has done its angular movement, we make the monster go back in a loop
-                if(_CurrentAngle > _EndPosition)
-                {
-                    _RightMoving = false;
-                }
-                else if(_CurrentAngle < _StartPosition)
-                {
-                    _RightMoving = true;
-                }
-
                 var oldAngle = _CurrentAngle;
-
-                if(_RightMoving)
+                if (_EndPosition > _StartPosition)
                 {
-                    _CurrentAngle += _CurrentSpeed * Time.deltaTime;
+                    if (_CurrentAngle > _EndPosition)
+                    {
+                        _RightMoving = false;
+                    }
+                    else if (_CurrentAngle < _StartPosition)
+                    {
+                        _RightMoving = true;
+                    }
+
+                    if (_RightMoving)
+                    {
+                        _CurrentAngle += _CurrentSpeed * Time.deltaTime;
+                    }
+                    else
+                    {
+                        _CurrentAngle -= _CurrentSpeed * Time.deltaTime;
+                    }
                 }
                 else
                 {
-                    _CurrentAngle -= _CurrentSpeed * Time.deltaTime;
+                    if (_CurrentAngle < _EndPosition)
+                    {
+                        _RightMoving = false;
+                    }
+                    else if (_CurrentAngle > _StartPosition)
+                    {
+                        _RightMoving = true;
+                    }
+
+                    if (_RightMoving)
+                    {
+                        _CurrentAngle -= _CurrentSpeed * Time.deltaTime;
+                    }
+                    else
+                    {
+                        _CurrentAngle += _CurrentSpeed * Time.deltaTime;
+                    }
                 }
 
                 // Rotate around center, by (_CurrentAngle-oldAngle).
