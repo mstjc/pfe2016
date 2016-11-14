@@ -27,7 +27,6 @@ public abstract class MovementBase : MonoBehaviour, IMovement {
         set { _Target = value; }
     }
 
-    private Vector3 _CurrentDirection;
     private float _TimeToCheckRotation = 1.0f;
 
 
@@ -66,13 +65,10 @@ public abstract class MovementBase : MonoBehaviour, IMovement {
         if(Time.time >= _TimeToCheckRotation)
         {
             _TimeToCheckRotation++;
-            var forward = transform.forward;
-            if (forward != _CurrentDirection)
-            {
-                LookAtTarget();
-            }
 
-            _CurrentDirection = forward;
+            float angleBetweenMonsterAndTarget = Vector3.Angle(_Target.transform.forward, transform.position - _Target.transform.position);
+            if (angleBetweenMonsterAndTarget >= 1)
+                LookAtTarget();
         }
 	}
 
