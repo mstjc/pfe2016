@@ -75,13 +75,13 @@
     <Compile Include="Assets\CreatedAssets\Script\ArcMovement.cs" />
     <Compile Include="Assets\CreatedAssets\Script\BlinkingLeapBugText.cs" />
     <Compile Include="Assets\CreatedAssets\Script\BulletBase.cs" />
+    <Compile Include="Assets\CreatedAssets\Script\FrontPanelActions.cs" />
     <Compile Include="Assets\CreatedAssets\Script\GameManager.cs" />
     <Compile Include="Assets\CreatedAssets\Script\Gun.cs" />
     <Compile Include="Assets\CreatedAssets\Script\HUDUpdating.cs" />
     <Compile Include="Assets\CreatedAssets\Script\IBullet.cs" />
     <Compile Include="Assets\CreatedAssets\Script\IMovement.cs" />
     <Compile Include="Assets\CreatedAssets\Script\IShooter.cs" />
-    <Compile Include="Assets\CreatedAssets\Script\MainMenuActions.cs" />
     <Compile Include="Assets\CreatedAssets\Script\MonsterBullet.cs" />
     <Compile Include="Assets\CreatedAssets\Script\MonsterFactory.cs" />
     <Compile Include="Assets\CreatedAssets\Script\MonsterManager.cs" />
