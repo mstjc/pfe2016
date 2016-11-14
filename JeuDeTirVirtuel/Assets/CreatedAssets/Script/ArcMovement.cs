@@ -56,7 +56,8 @@ public class ArcMovement : MovementBase
     {
         base.Start();
         // We assign the start position
-        _StartPosition = Mathf.Atan2(Monster.transform.position.x, Monster.transform.position.z);
+        _StartPosition = Mathf.Deg2Rad * Vector2.Angle(Vector2.right, new Vector2(Monster.transform.position.x, Monster.transform.position.z));
+
         // We check a random value for wether going to right or left and we assing the end position
         _EndPosition = _StartPosition + _ArcAngle;
         if (Random.value < 0.5f)
@@ -117,6 +118,9 @@ public class ArcMovement : MovementBase
                 {
                     _RightMoving = true;
                 }
+
+                var oldAngle = _CurrentAngle;
+
                 if(_RightMoving)
                 {
                     _CurrentAngle += _CurrentSpeed * Time.deltaTime;
@@ -125,7 +129,9 @@ public class ArcMovement : MovementBase
                 {
                     _CurrentAngle -= _CurrentSpeed * Time.deltaTime;
                 }
-                Monster.transform.position = new Vector3(Mathf.Sin(_CurrentAngle) * _Radius, Monster.transform.position.y, Mathf.Cos(_CurrentAngle) * _Radius);
+
+                // Rotate around center, by (_CurrentAngle-oldAngle).
+                Monster.transform.RotateAround(Vector3.zero, Vector3.up, Mathf.Rad2Deg * (_CurrentAngle-oldAngle));
             }
         }
         else
