@@ -9,7 +9,7 @@ public class ArcMovement : MovementBase
     private float _EndPosition;
     private float _CurrentSpeed;
     private float _CurrentAngle;
-    private float _Radius = 50.0f;
+    private float _Radius = 40.0f;
     private bool _RightMoving = true;
     private bool _Moving;
     private RandomTimer _WalkTimer;
