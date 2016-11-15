@@ -9,7 +9,7 @@ public class PlayerBulletShell : PlayerBullet {
     {
         base.OnCollisionEnter(collision);
 
-        if (!_HasCollided && collision.collider.name == "Arena")
+        if (!_HasCollided && (collision.collider.name == "Arena" || collision.collider.name == "Terrain"))
         {
             var audio = GetComponent<AudioSource>();
             if (audio != null)
