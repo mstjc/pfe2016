@@ -40,6 +40,12 @@ public class PlayerHealth : MonoBehaviour {
         }
     }
 
+    public void RefillHealth()
+    {
+        _CurrentHealth = 100f;
+        SetHealthUI();
+    }
+
     private void SetHealthUI()
     {
         // Adjust the value and colour of the slider.
@@ -53,14 +59,4 @@ public class PlayerHealth : MonoBehaviour {
         _Dead = true;
         GameManager.Reset();
     }
-
-    // Use this for initialization
-    void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 }

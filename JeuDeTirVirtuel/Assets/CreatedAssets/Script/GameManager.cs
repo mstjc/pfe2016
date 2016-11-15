@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour {
 
     private int _CurrentStage = 0;
     private int _EnnemiesRemaining = 0;
+    private PlayerHealth _PlayerHealth;
 
     private WaitForSeconds _TimeBetweenSpawn;
     private WaitForSeconds _StartOfStageWait;
@@ -58,6 +59,7 @@ public class GameManager : MonoBehaviour {
     // Use this for initialization
     void Start () {
         _StartOfStageWait = new WaitForSeconds(_StartOfStageWaitTime);
+        _PlayerHealth = _Player.GetComponent<PlayerHealth>();
         _RightHandDetectors.DisableDetectors();
         _LeftHandDetectors.DisableDetectors();
     }
@@ -126,6 +128,7 @@ public class GameManager : MonoBehaviour {
             // waiting for all enemies to be defeated.
             yield return null;
         }
+        _PlayerHealth.RefillHealth();
     }
 
     private void InstantiateEnnemy()
