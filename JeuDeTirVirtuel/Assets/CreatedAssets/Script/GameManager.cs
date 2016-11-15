@@ -7,11 +7,13 @@ using Random = UnityEngine.Random;
 public class GameManager : MonoBehaviour {
 
     [SerializeField]
-    private int _numStage = 1;
+    private int _NumStage = 1;
     [SerializeField]
-    private int[] _foesPerStage = new int[] { 10 };
+    private int[] _FoesPerStage = new int[] { 10 };
     [SerializeField]
-    private float[] _foesSpawnWait = new float[] { 3.0f };
+    private float[] _FoesSpawnWait = new float[] { 3.0f };
+    [SerializeField]
+    private int[] _TypeOfEnnemisSpawning;
     [SerializeField]
     private float _FOVAngleDeg = 180F;
     [SerializeField]
@@ -30,8 +32,8 @@ public class GameManager : MonoBehaviour {
     private int _CurrentStage = 0;
     private int _EnnemiesRemaining = 0;
 
-    private WaitForSeconds _timeBetweenSpawn;
-    private WaitForSeconds _startOfStageWait;
+    private WaitForSeconds _TimeBetweenSpawn;
+    private WaitForSeconds _StartOfStageWait;
 
     public void BeginGame()
     {
@@ -55,7 +57,7 @@ public class GameManager : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        _startOfStageWait = new WaitForSeconds(_StartOfStageWaitTime);
+        _StartOfStageWait = new WaitForSeconds(_StartOfStageWaitTime);
         _RightHandDetectors.DisableDetectors();
         _LeftHandDetectors.DisableDetectors();
     }
@@ -71,7 +73,7 @@ public class GameManager : MonoBehaviour {
         yield return StartCoroutine(StagePlaying(stage));
         yield return StartCoroutine(StageEnding(stage));
 
-        if ((stage + 1) == _numStage)
+        if ((stage + 1) == _NumStage)
         {
             //Last Stage completed
         }
@@ -84,21 +86,21 @@ public class GameManager : MonoBehaviour {
 
     private IEnumerator StageStarting(int stage)
     {
-        _startOfStageWait = new WaitForSeconds(_StartOfStageWaitTime);
-        _timeBetweenSpawn = new WaitForSeconds(_foesSpawnWait[stage]);
-        yield return _startOfStageWait;
+        _StartOfStageWait = new WaitForSeconds(_StartOfStageWaitTime);
+        _TimeBetweenSpawn = new WaitForSeconds(_FoesSpawnWait[stage]);
+        yield return _StartOfStageWait;
     }
 
 
     private IEnumerator StagePlaying(int stage)
     {
-        if (_foesPerStage.Length == 0)
+        if (_FoesPerStage.Length == 0)
         {
             Debug.Log("No foes per stage..");
         }
         else
         {
-            int foesForStage = _foesPerStage[stage];
+            int foesForStage = _FoesPerStage[stage];
 
             _EnnemiesRemaining = foesForStage;
             _HUDUpdating.UpdateEnnemiesRemaining(_EnnemiesRemaining);
@@ -110,7 +112,7 @@ public class GameManager : MonoBehaviour {
 
             for (int curFoes = 1; curFoes < foesForStage; curFoes++)
             {
-                yield return _timeBetweenSpawn;
+                yield return _TimeBetweenSpawn;
                 InstantiateEnnemy();
             }
         }
@@ -135,7 +137,7 @@ public class GameManager : MonoBehaviour {
         var x = 40 * Mathf.Cos(angle);
         var z = 40 * Mathf.Sin(angle);
 
-        var alienIndex = Random.Range(0, _Aliens.Length);
+        var alienIndex = Random.Range(0, _TypeOfEnnemisSpawning[_CurrentStage]);
         var alien = Instantiate(_Aliens[alienIndex], new Vector3(x, 0, z), Quaternion.identity) as GameObject;
         var alienScript = alien.GetComponent(typeof(MonsterManager)) as MonsterManager;
 

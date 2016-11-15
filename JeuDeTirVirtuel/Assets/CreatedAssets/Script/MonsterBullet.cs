@@ -2,12 +2,14 @@
 
 public class MonsterBullet : BulletBase {
 
+    [SerializeField]
+    private float _Damage;
+
     private float _CheckTime = 0.0f;
 
     public override void Start()
     {
         base.Start();
-        Damage = 5.0f;
     }
 
     protected override void OnCollisionEnter(Collision collision)
@@ -22,7 +24,7 @@ public class MonsterBullet : BulletBase {
         if (player == null)
             return;
 
-        player.TakeDamage(Damage);
+        player.TakeDamage(_Damage);
     }
 
     public override void Update()

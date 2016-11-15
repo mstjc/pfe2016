@@ -9,7 +9,6 @@ public class ArcMovement : MovementBase
     private float _BiggestAngle; // always the biggest angle
     private float _CurrentSpeed;
     private float _CurrentAngle;
-    private float _Radius = 40.0f;
     private bool _RightMoving = true;
     private bool _Moving;
     private RandomTimer _WalkTimer;
