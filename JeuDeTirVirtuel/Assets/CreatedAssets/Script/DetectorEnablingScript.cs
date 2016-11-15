@@ -12,6 +12,7 @@ public class DetectorEnablingScript : MonoBehaviour {
         foreach (Detector d in _Detector)
         {
             d.Activate();
+            d.enabled = true;
         }
     }
 
@@ -20,6 +21,7 @@ public class DetectorEnablingScript : MonoBehaviour {
         foreach (Detector d in _Detector)
         {
             d.Deactivate();
+            d.enabled = false;
         }
     }
 }
