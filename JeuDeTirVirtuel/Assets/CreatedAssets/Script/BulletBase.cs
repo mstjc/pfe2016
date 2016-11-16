@@ -32,11 +32,8 @@ public abstract class BulletBase : MonoBehaviour, IBullet {
 
     protected virtual void OnTriggerEnter(Collider other)
     {
-        Rigidbody targetRigidBody = other.GetComponent<Rigidbody>();
-
-        if (!targetRigidBody)
-            return;
-
+        if(gameObject.GetComponent<Collider>().isTrigger)
+            Destruct();
     }
 
     protected virtual void OnCollisionEnter(Collision collision)

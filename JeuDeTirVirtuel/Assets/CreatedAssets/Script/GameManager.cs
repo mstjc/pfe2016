@@ -66,8 +66,8 @@ public class GameManager : MonoBehaviour {
 
     private IEnumerator StageLoop(int stage)
     {
-        _CurrentStage = stage + 1;
-        _HUDUpdating.UpdateStage(_CurrentStage);
+        _CurrentStage = stage;
+        _HUDUpdating.UpdateStage(_CurrentStage + 1);
         //_HUDUpdating.UpdateEnnemiesRemaining(_EnnemiesRemaining);
 
 

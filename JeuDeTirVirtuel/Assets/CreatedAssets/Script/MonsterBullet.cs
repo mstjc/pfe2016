@@ -16,11 +16,13 @@ public class MonsterBullet : BulletBase {
 
     protected override void OnTriggerEnter(Collider other)
     {
-        base.OnTriggerEnter(other);
-
         PlayerHealth player = other.GetComponent<PlayerHealth>();
         if (other.GetComponent<Shield>())
+        {
+            // Fuck yeah
+            gameObject.GetComponent<SphereCollider>().isTrigger = false;
             Destruct();
+        }
         else if (other.GetComponent<PlayerBullet>())
             TakeDamage();
         else if(player)
@@ -28,8 +30,6 @@ public class MonsterBullet : BulletBase {
             player.TakeDamage(_Damage);
             Destroy(gameObject);
         }
-        else
-            return;
     }
 
     public override void Update()

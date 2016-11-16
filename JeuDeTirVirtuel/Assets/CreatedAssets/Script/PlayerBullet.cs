@@ -14,8 +14,6 @@ public class PlayerBullet : BulletBase {
 
     protected override void OnTriggerEnter(Collider other)
     {
-        base.OnTriggerEnter(other);
-
         MonsterManager monsterHealth = other.GetComponent<MonsterManager>();
 
         if (monsterHealth)
@@ -25,8 +23,6 @@ public class PlayerBullet : BulletBase {
         }
         else if (other.GetComponent<MonsterBullet>())
             Destroy(gameObject);
-        else
-            return;
     }
 
     protected override void OnCollisionEnter(Collision collision)
