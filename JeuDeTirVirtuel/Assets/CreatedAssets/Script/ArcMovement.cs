@@ -57,7 +57,9 @@ public class ArcMovement : MovementBase
         base.Start();
         // cheat ?
         BoxCollider coll = gameObject.GetComponent<BoxCollider>();
+        Rigidbody rigid = gameObject.GetComponent<Rigidbody>();
         coll.isTrigger = true;
+        rigid.useGravity = false;
         // We set a start position
         float startAngle = Mathf.Deg2Rad * Vector2.Angle(Vector2.right, new Vector2(Monster.transform.position.x, Monster.transform.position.z));
         
