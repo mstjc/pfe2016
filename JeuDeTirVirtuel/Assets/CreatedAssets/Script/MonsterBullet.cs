@@ -4,6 +4,8 @@ public class MonsterBullet : BulletBase {
 
     [SerializeField]
     private float _Damage;
+    [SerializeField]
+    private int _Health;
 
     private float _CheckTime = 0.0f;
 
@@ -12,19 +14,22 @@ public class MonsterBullet : BulletBase {
         base.Start();
     }
 
-    protected override void OnCollisionEnter(Collision collision)
+    protected override void OnTriggerEnter(Collider other)
     {
-        if (_Destructing)
+        base.OnTriggerEnter(other);
+
+        PlayerHealth player = other.GetComponent<PlayerHealth>();
+        if (other.GetComponent<Shield>())
+            Destruct();
+        else if (other.GetComponent<PlayerBullet>())
+            TakeDamage();
+        else if(player)
+        {
+            player.TakeDamage(_Damage);
+            Destroy(gameObject);
+        }
+        else
             return;
-
-        base.OnCollisionEnter(collision);
-
-        var player = collision.gameObject.GetComponent<PlayerHealth>();
-
-        if (player == null)
-            return;
-
-        player.TakeDamage(_Damage);
     }
 
     public override void Update()
@@ -37,5 +42,12 @@ public class MonsterBullet : BulletBase {
                 Destruct();
             }
         }
+    }
+
+    private void TakeDamage()
+    {
+        --_Health;
+        if (_Health <= 0)
+            Destroy(gameObject);
     }
 }

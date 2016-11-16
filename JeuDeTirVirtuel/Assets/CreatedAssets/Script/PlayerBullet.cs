@@ -5,6 +5,7 @@ public class PlayerBullet : BulletBase {
 
     [SerializeField]
     private float _MaxLifeTime = 2f;
+    private float _Damage = 1;
 
     public override void Start ()
     {
@@ -15,34 +16,21 @@ public class PlayerBullet : BulletBase {
     {
         base.OnTriggerEnter(other);
 
-        Rigidbody targetRigidBody = other.GetComponent<Rigidbody>();
+        MonsterManager monsterHealth = other.GetComponent<MonsterManager>();
 
-        if (!targetRigidBody)
-            return;
-
-        MonsterManager targetHealth = targetRigidBody.GetComponent<MonsterManager>();
-
-        if (targetHealth)
+        if (monsterHealth)
         {
-            targetHealth.TakeDamage(Damage);
+            monsterHealth.TakeDamage(_Damage);
             Destroy(gameObject);
         }
-
-        MonsterBullet bulletCol = targetRigidBody.GetComponent<MonsterBullet>();
-        if(bulletCol)
-        {
-            Destruct();
-        }
-        
+        else if (other.GetComponent<MonsterBullet>())
+            Destroy(gameObject);
+        else
+            return;
     }
 
     protected override void OnCollisionEnter(Collision collision)
     {
-        //base.OnCollisionEnter(collision);
-        OnTriggerEnter(collision.collider);
+       
     }
-
-    public override void Update () {
-	
-	}
 }

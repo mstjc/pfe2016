@@ -51,9 +51,13 @@ public class ArcMovement : MovementBase
     #endregion
 
     #region Public Methods
+ 
     public override void Start()
     {
         base.Start();
+        // cheat ?
+        BoxCollider coll = gameObject.GetComponent<BoxCollider>();
+        coll.isTrigger = true;
         // We set a start position
         float startAngle = Mathf.Deg2Rad * Vector2.Angle(Vector2.right, new Vector2(Monster.transform.position.x, Monster.transform.position.z));
         
