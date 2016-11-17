@@ -8,7 +8,7 @@ public class FrontPanelActions : MonoBehaviour {
     [SerializeField]
     private Button _MainMenuQuit, _MainMenuTutorial, _MainMenuStart, _LeapBugButton, _ExitButton;
     [SerializeField]
-    private RectTransform _FrontRightPanel, _FrontLeftPanel, _GameTitle;
+    private RectTransform _FrontRightPanel, _FrontLeftPanel, _GameTitle, _TutorialBriefing;
     [SerializeField]
     private GameManager _GM;
     [SerializeField]
@@ -70,6 +70,7 @@ public class FrontPanelActions : MonoBehaviour {
 
     void SetTutorialVisibility(bool boolean)
     {
+        _TutorialBriefing.gameObject.SetActive(boolean);
         _FrontLeftPanel.gameObject.SetActive(boolean);
         _FrontRightPanel.gameObject.SetActive(boolean);
     }
