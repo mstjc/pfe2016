@@ -20,14 +20,19 @@ public class MonsterBullet : BulletBase {
         if (other.GetComponent<Shield>())
         {
             // Fuck yeah
+            PlayMetalImpact();
             gameObject.GetComponent<SphereCollider>().isTrigger = false;
             Destruct();
         }
         else if (other.GetComponent<PlayerBullet>())
+        {
             TakeDamage();
+            PlayBulletImpact();
+        }
         else if(player)
         {
             player.TakeDamage(_Damage);
+            PlayFleshImpact(0.4f);
             Destroy(gameObject);
         }
     }

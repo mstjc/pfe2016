@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System;
+using UnityEngine.Audio;
 
 public class GunSoundManager : MonoBehaviour {
 
@@ -29,6 +30,9 @@ public class GunSoundManager : MonoBehaviour {
 
     [SerializeField]
     private float _SoundLevel = 1.0f;
+
+    [SerializeField]
+    private AudioMixerGroup _Mixer;
 
     private float _pitchRange = 0.05f;
 
@@ -69,36 +73,36 @@ public class GunSoundManager : MonoBehaviour {
 
     private void OnLeftGunFired(object sender, EventArgs e)
     {
-        PlayClipAtPoint(_LeftGunClip, _LeftGun.transform.position, _SoundLevel, UnityEngine.Random.Range(1 - _pitchRange, 1 + _pitchRange));
+        SoundUtil.PlayClipAtPoint(_LeftGunClip, _Mixer, _LeftGun.transform.position, _SoundLevel, UnityEngine.Random.Range(1 - _pitchRange, 1 + _pitchRange));
     }
 
     private void OnRightGunFired(object sender, EventArgs e)
     {
-        PlayClipAtPoint(_RightGunClip, _RightGun.transform.position, _SoundLevel, UnityEngine.Random.Range(1 - _pitchRange, 1 + _pitchRange));
+        SoundUtil.PlayClipAtPoint(_RightGunClip, _Mixer, _RightGun.transform.position, _SoundLevel, UnityEngine.Random.Range(1 - _pitchRange, 1 + _pitchRange));
     }
 
     private void OnLeftGunReloaded(object sender, EventArgs e)
     {
-        PlayClipAtPoint(_LeftGunReloadClip, _LeftGun.transform.position, _SoundLevel, 1);
+        SoundUtil.PlayClipAtPoint(_LeftGunReloadClip, _Mixer, _LeftGun.transform.position, _SoundLevel, 1);
     }
 
     private void OnRightGunReloaded(object sender, EventArgs e)
     {
-        PlayClipAtPoint(_RightGunReloadClip, _RightGun.transform.position, _SoundLevel, 1);
+        SoundUtil.PlayClipAtPoint(_RightGunReloadClip, _Mixer, _RightGun.transform.position, _SoundLevel, 1);
     }
 
     private void OnLeftGunTick(object sender, EventArgs e)
     {
-        PlayClipAtPoint(_LeftGunEmptyClip, _LeftGun.transform.position, _SoundLevel, 1);
+        SoundUtil.PlayClipAtPoint(_LeftGunEmptyClip, _Mixer, _LeftGun.transform.position, _SoundLevel, 1);
     }
 
     private void OnRightGunTick(object sender, EventArgs e)
     {
-        PlayClipAtPoint(_RightGunEmptyClip, _RightGun.transform.position, _SoundLevel, 1);
+        SoundUtil.PlayClipAtPoint(_RightGunEmptyClip, _Mixer, _RightGun.transform.position, _SoundLevel, 1);
     }
 
     // Source : https://forum.unity3d.com/threads/audiosource-pitch-question-c.164374/
-    GameObject PlayClipAtPoint(AudioClip clip, Vector3 position, float volume, float pitch)
+   /* GameObject PlayClipAtPoint(AudioClip clip, AudioMixerGroup mixer, Vector3 position, float volume, float pitch)
     {
         GameObject obj = new GameObject();
         obj.transform.position = position;
@@ -107,9 +111,10 @@ public class GunSoundManager : MonoBehaviour {
         audio.pitch = pitch;
         audio.volume = volume;
         audio.spatialBlend = 1.0f;
+        audio.outputAudioMixerGroup = mixer;
         audio.PlayOneShot(clip, volume);
         Destroy(obj, clip.length / pitch);
         return obj;
-    }
+    }*/
 
 }
