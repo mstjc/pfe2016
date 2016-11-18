@@ -36,7 +36,9 @@ public class GameManager : MonoBehaviour {
     private int _CurrentStage = 0;
     private int _EnnemiesRemaining = 0;
     private PlayerHealth _PlayerHealth;
+    private float _CongratulationTimeFloat = 4f;
 
+    private WaitForSeconds _CongratulationTime;
     private WaitForSeconds _TimeBetweenSpawn;
     private WaitForSeconds _StartOfStageWait;
 
@@ -64,10 +66,41 @@ public class GameManager : MonoBehaviour {
     // Use this for initialization
     void Start () {
         _StartOfStageWait = new WaitForSeconds(_StartOfStageWaitTime);
+        _CongratulationTime = new WaitForSeconds(_CongratulationTimeFloat);
         _PlayerHealth = _Player.GetComponent<PlayerHealth>();
         _RightHandDetectors.DisableDetectors();
         _LeftHandDetectors.DisableDetectors();
         PlayMainMusic();
+    }
+    private IEnumerator LastBoss()
+    {
+        yield return StartCoroutine(LastBossFirstPhase());
+        yield return StartCoroutine(LastBossSecondPhase());
+        yield return StartCoroutine(LastBossLastPhase());
+        yield return StartCoroutine(LastBossDefeated());
+    }
+
+    private IEnumerator LastBossFirstPhase()
+    {
+        // Spawning of the first phase monsters
+        yield return null;
+    }
+
+    private IEnumerator LastBossSecondPhase()
+    {
+        yield return null;
+    }
+
+    private IEnumerator LastBossLastPhase()
+    {
+        yield return null;
+    }
+
+    private IEnumerator LastBossDefeated()
+    {
+        // Display a text congratulating the player for x seconds then reset the game;
+        yield return _CongratulationTime;
+        Reset();
     }
 
     private IEnumerator StageLoop(int stage)
@@ -84,6 +117,7 @@ public class GameManager : MonoBehaviour {
         if ((stage + 1) == _NumStage)
         {
             //Last Stage completed
+            StartCoroutine(LastBoss());
         }
         else
         {
@@ -142,11 +176,24 @@ public class GameManager : MonoBehaviour {
         float horizon = 180F;
         var radAngleRange = ((_FOVAngleDeg - horizon) /2) * Mathf.Deg2Rad;
         var radHorizon = horizon * Mathf.Deg2Rad;
-        var angle = Random.Range(-radAngleRange, radAngleRange + radHorizon);
-        var x = 40 * Mathf.Cos(angle);
-        var z = 40 * Mathf.Sin(angle);
-
+        float angle = 0;
+        float x = 0;
+        float z = 0;
         var alienIndex = Random.Range(0, _TypeOfEnnemisSpawning[_CurrentStage]);
+        bool occupiedSpace = true;
+        while(occupiedSpace)
+        {
+            angle = Random.Range(-radAngleRange, radAngleRange + radHorizon);
+            x = 40 * Mathf.Cos(angle);
+            z = 40 * Mathf.Sin(angle);
+            Vector3 pos = new Vector3(x, 0, z);
+            var hitColliders = Physics.OverlapSphere(pos, 2); // Biggest monster is 1.5x+1z and this is int only so 2
+            if (hitColliders.Length == 0)
+            {
+                occupiedSpace = false;
+            }
+        }
+
         var alien = Instantiate(_Aliens[alienIndex], new Vector3(x, 0, z), Quaternion.identity) as GameObject;
         var alienScript = alien.GetComponent(typeof(MonsterManager)) as MonsterManager;
 
