@@ -1,20 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ArcMovement : MovementBase
+public class LastBossMovement : MovementBase
 {
     #region Fields
     private float _MaxAngle = Mathf.PI;
-    private float _SmallestAngle; // always the smallest angle
-    private float _BiggestAngle; // always the biggest angle
+    private float _LowerLimit; 
+    private float _UpperLimit; 
     private float _CurrentSpeed;
     private float _CurrentAngle;
     private bool _RightMoving = true;
     private bool _Moving;
     private RandomTimer _WalkTimer;
-
-    [SerializeField]
-    protected float _ArcAngle = Mathf.PI/3;
 
     [SerializeField]
     protected float _TimeToCompleteArc;
@@ -28,7 +25,6 @@ public class ArcMovement : MovementBase
     #endregion
 
     #region Properties
-
 
     public float TimeToCompleteArc
     {
@@ -51,46 +47,24 @@ public class ArcMovement : MovementBase
     #endregion
 
     #region Public Methods
- 
+
     public override void Start()
     {
         base.Start();
-        // cheat ?
-        BoxCollider coll = gameObject.GetComponent<BoxCollider>();
-        Rigidbody rigid = gameObject.GetComponent<Rigidbody>();
-        coll.isTrigger = true;
-        rigid.useGravity = false;
+        CanMove = false;
         // We set a start position
-        float startAngle = Mathf.Deg2Rad * Vector2.Angle(Vector2.right, new Vector2(Monster.transform.position.x, Monster.transform.position.z));
-        
+        _UpperLimit = 180f * Mathf.Deg2Rad;
+        _LowerLimit = 0f * Mathf.Deg2Rad;
+
         // We check a random value for wether going to right or left
         if (Random.value < 0.5f)
         {
             _RightMoving = false;
-            _SmallestAngle = startAngle;
-            _BiggestAngle = _SmallestAngle + _ArcAngle;
-            _CurrentAngle = _SmallestAngle;
         }
-        else
-        {
-            _RightMoving = true;
-            _BiggestAngle = startAngle;
-            _SmallestAngle = _BiggestAngle - _ArcAngle;
-            _CurrentAngle = _BiggestAngle;
-        }
-        // We check if angle limits are broken. in which case, we adjust our angles
-        if(_SmallestAngle < 0)
-        {
-            _BiggestAngle += Mathf.Abs(_SmallestAngle);
-            _SmallestAngle = 0;
 
-        }else if(_BiggestAngle > _MaxAngle)
-        {
-            _SmallestAngle -= _BiggestAngle - Mathf.PI;
-            _BiggestAngle = Mathf.PI;
-        }
-        _CurrentSpeed = _ArcAngle / _TimeToCompleteArc;
-       
+        _CurrentAngle = Mathf.Deg2Rad * Vector2.Angle(Vector2.right, new Vector2(Monster.transform.position.x, Monster.transform.position.z));
+        _CurrentSpeed = _UpperLimit / _TimeToCompleteArc;
+
     }
     public void OnDisable()
     {
@@ -122,7 +96,7 @@ public class ArcMovement : MovementBase
         {
             if (!_Moving)
             {
-                _CurrentSpeed = _ArcAngle / _TimeToCompleteArc;
+                _CurrentSpeed = _UpperLimit / _TimeToCompleteArc;
             }
 
             if (_Moving)
@@ -130,15 +104,16 @@ public class ArcMovement : MovementBase
                 // We check the position at each frame. if it has done its angular movement, we make the monster go back in a loop
                 var oldAngle = _CurrentAngle;
 
-                if (_CurrentAngle <= _SmallestAngle)
+                if (_CurrentAngle <= _LowerLimit)
                 {
                     _RightMoving = false;
-                }else if (_CurrentAngle >= _BiggestAngle)
+                }
+                else if (_CurrentAngle >= _UpperLimit)
                 {
                     _RightMoving = true;
                 }
 
-                if(_RightMoving)
+                if (_RightMoving)
                 {
                     _CurrentAngle -= _CurrentSpeed * Time.deltaTime;
                 }
@@ -148,7 +123,7 @@ public class ArcMovement : MovementBase
                 }
 
                 // Rotate around center, by (_CurrentAngle-oldAngle).
-                Monster.transform.RotateAround(Vector3.zero, Vector3.down, Mathf.Rad2Deg * (_CurrentAngle-oldAngle));
+                Monster.transform.RotateAround(Vector3.zero, Vector3.down, Mathf.Rad2Deg * (_CurrentAngle - oldAngle));
             }
         }
         else

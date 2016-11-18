@@ -95,7 +95,8 @@ public class GameManager : MonoBehaviour {
         _EnnemiesRemaining = 20;
         _TimeBetweenSpawn = new WaitForSeconds(spawnTime);
         _HUDUpdating.UpdateEnnemiesRemaining(_EnnemiesRemaining);
-
+        _LastBoss.GetComponent<LastBossMovement>().CanMove = true;
+        _LastBoss.GetComponent<LastBossShooter>().CanShoot = true;
         if (_EnnemiesRemaining > 0)
         {
             InstantiateEnnemy();
