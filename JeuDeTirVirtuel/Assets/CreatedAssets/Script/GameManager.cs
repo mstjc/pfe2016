@@ -24,6 +24,12 @@ public class GameManager : MonoBehaviour {
     [SerializeField]
     private GameObject[] _Aliens;
     [SerializeField]
+    private GameObject _LastBoss;
+    [SerializeField]
+    private GameObject _LastBossColumn;
+    [SerializeField]
+    private GameObject _LastBossForcefield;
+    [SerializeField]
     private HUDUpdating _HUDUpdating;
     [SerializeField]
     private DetectorEnablingScript _RightHandDetectors;
@@ -36,7 +42,7 @@ public class GameManager : MonoBehaviour {
     private int _CurrentStage = 0;
     private int _EnnemiesRemaining = 0;
     private PlayerHealth _PlayerHealth;
-    private float _CongratulationTimeFloat = 4f;
+    private float _CongratulationTimeFloat = 5f;
 
     private WaitForSeconds _CongratulationTime;
     private WaitForSeconds _TimeBetweenSpawn;
@@ -74,26 +80,51 @@ public class GameManager : MonoBehaviour {
     }
     private IEnumerator LastBoss()
     {
-        yield return StartCoroutine(LastBossFirstPhase());
-        yield return StartCoroutine(LastBossSecondPhase());
-        yield return StartCoroutine(LastBossLastPhase());
+        Instantiate(_LastBoss, new Vector3(0, 4.5f, 40), Quaternion.AngleAxis(180, new Vector3(0, 1, 0)));
+        Instantiate(_LastBossColumn, new Vector3(-7, 12, 30), Quaternion.identity);
+        Instantiate(_LastBossColumn, new Vector3(7, 12, 30), Quaternion.identity);
+        Instantiate(_LastBossForcefield, new Vector3(0, 12, 30), Quaternion.identity);
+        yield return StartCoroutine(LastBossPhase(5,0));
+        yield return StartCoroutine(LastBossPhase(5,4));
+        yield return StartCoroutine(LastBossFinalPhase());
         yield return StartCoroutine(LastBossDefeated());
     }
 
-    private IEnumerator LastBossFirstPhase()
+    private IEnumerator LastBossPhase(float spawnTime, int alienSpawnStartIndex )
     {
-        // Spawning of the first phase monsters
-        yield return null;
+        _EnnemiesRemaining = 20;
+        _TimeBetweenSpawn = new WaitForSeconds(spawnTime);
+        _HUDUpdating.UpdateEnnemiesRemaining(_EnnemiesRemaining);
+
+        if (_EnnemiesRemaining > 0)
+        {
+            InstantiateEnnemy();
+        }
+
+        for (int curFoes = 1; curFoes < _EnnemiesRemaining; curFoes++)
+        {
+            yield return _TimeBetweenSpawn;
+            InstantiateEnnemy();
+        }
+        while (_EnnemiesRemaining > 0)
+        {
+            // waiting for all enemies to be defeated.
+            yield return null;
+        }
     }
 
-    private IEnumerator LastBossSecondPhase()
+    private IEnumerator LastBossFinalPhase()
     {
-        yield return null;
-    }
-
-    private IEnumerator LastBossLastPhase()
-    {
-        yield return null;
+        // Force field off, spawning skeleton only (slower spawn) boss moves in arc
+        _EnnemiesRemaining = 1;
+        _HUDUpdating.UpdateEnnemiesRemaining(_EnnemiesRemaining);
+        _TimeBetweenSpawn = new WaitForSeconds(3);
+        while (_EnnemiesRemaining > 0)
+        {
+            // waiting for Skrull to be defeated.
+            InstantiateEnnemy(4,false);
+            yield return _TimeBetweenSpawn;
+        }
     }
 
     private IEnumerator LastBossDefeated()
@@ -193,13 +224,55 @@ public class GameManager : MonoBehaviour {
                 occupiedSpace = false;
             }
         }
-
         var alien = Instantiate(_Aliens[alienIndex], new Vector3(x, 0, z), Quaternion.identity) as GameObject;
         var alienScript = alien.GetComponent(typeof(MonsterManager)) as MonsterManager;
 
         if(alienScript != null)
         {
             alienScript.Died += OnAlienDead;
+            alienScript._Target = _Player;
+        }
+    }
+
+    private void InstantiateEnnemy(int startIndex, bool ennemiLifeMatters)
+    {
+        float bossAnglePlus = (30f + 90f) * Mathf.Deg2Rad;
+        float bossAngleMinus = (90f - 30f) * Mathf.Deg2Rad;
+        float middleAngle = (90f * Mathf.Deg2Rad);
+        float horizon = 180F;
+        var radAngleRange = ((_FOVAngleDeg - horizon) / 2) * Mathf.Deg2Rad;
+        var radHorizon = horizon * Mathf.Deg2Rad;
+        float angle = 0;
+        float x = 0;
+        float z = 0;
+        var alienIndex = Random.Range(startIndex, _Aliens.Length);
+        bool occupiedSpace = true;
+        while (occupiedSpace)
+        {
+            angle = Random.Range(-radAngleRange, radAngleRange + radHorizon);
+            if(angle <= bossAnglePlus && angle > bossAngleMinus)
+            {
+                if (angle < middleAngle)
+                    angle = angle - (middleAngle - angle);
+                else
+                    angle = angle + (angle + middleAngle);
+            }
+            x = 40 * Mathf.Cos(angle);
+            z = 40 * Mathf.Sin(angle);
+            Vector3 pos = new Vector3(x, 0, z);
+            var hitColliders = Physics.OverlapSphere(pos, 2); // Biggest monster is 1.5x+1z and this is int only so 2
+            if (hitColliders.Length == 0)
+            {
+                occupiedSpace = false;
+            }
+        }
+        var alien = Instantiate(_Aliens[alienIndex], new Vector3(x, 0, z), Quaternion.identity) as GameObject;
+        var alienScript = alien.GetComponent(typeof(MonsterManager)) as MonsterManager;
+
+        if (alienScript != null)
+        {
+            if(ennemiLifeMatters)
+                alienScript.Died += OnAlienDead;
             alienScript._Target = _Player;
         }
     }

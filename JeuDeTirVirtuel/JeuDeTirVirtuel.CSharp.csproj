@@ -103,6 +103,7 @@
     <Compile Include="Assets\CreatedAssets\Script\StandingMovement.cs" />
     <Compile Include="Assets\CreatedAssets\Script\StraightMovement.cs" />
     <Compile Include="Assets\CreatedAssets\Script\TimedShooter.cs" />
+    <Compile Include="Assets\CreatedAssets\Script\Wall.cs" />
     <Compile Include="Assets\DownloadedAssets\3DModel\Earth\Scripts\EarthScript.cs" />
     <Compile Include="Assets\DownloadedAssets\3DModel\Earth\Scripts\MoveScript.cs" />
     <Compile Include="Assets\DownloadedAssets\3DModel\Earth\Scripts\SphereScript.cs" />
