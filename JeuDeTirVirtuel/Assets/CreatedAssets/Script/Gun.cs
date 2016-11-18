@@ -27,6 +27,7 @@ public class Gun : MonoBehaviour {
 
     public event EventHandler Fired;
     public event EventHandler Reloaded;
+    public event EventHandler FinishedReloading;
     public event EventHandler Tick;
 
     private bool _TriggerReload = false;
@@ -44,6 +45,16 @@ public class Gun : MonoBehaviour {
     ArrayList _MunitionBullets = new ArrayList();
 
     private Animator _Animator;
+
+    public int NbBullets
+    {
+        get { return _NbBullets; }
+    }
+
+    public int NbBulletsInShell
+    {
+        get { return _NbBulletsInShell; }
+    }
 
     void Awake()
     {
@@ -116,10 +127,11 @@ public class Gun : MonoBehaviour {
                     _TriggerShoot = true;
                 }
 
+                _NbBullets--;
+
                 OnFired();
 
                 // TODO
-                _NbBullets--;
                 if (_NbBullets <= 0)
                 {
                     _IsReloaded = false;
@@ -147,6 +159,15 @@ public class Gun : MonoBehaviour {
         if (Reloaded != null)
         {
             Reloaded(this, EventArgs.Empty);
+        }
+    }
+
+
+    private void OnFinishReloading()
+    {
+        if (FinishedReloading != null)
+        {
+            FinishedReloading(this, EventArgs.Empty);
         }
     }
 
@@ -244,5 +265,6 @@ public class Gun : MonoBehaviour {
         _NbBullets = _NbBulletsInShell;
         _IsReloaded = true;
         _IsReloading = false;
+        OnFinishReloading();
     }
 }

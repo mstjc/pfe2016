@@ -79,6 +79,7 @@
     <Compile Include="Assets\CreatedAssets\Script\FrontPanelActions.cs" />
     <Compile Include="Assets\CreatedAssets\Script\GameManager.cs" />
     <Compile Include="Assets\CreatedAssets\Script\Gun.cs" />
+    <Compile Include="Assets\CreatedAssets\Script\GunHUD.cs" />
     <Compile Include="Assets\CreatedAssets\Script\HUDUpdating.cs" />
     <Compile Include="Assets\CreatedAssets\Script\IBullet.cs" />
     <Compile Include="Assets\CreatedAssets\Script\IMovement.cs" />
