@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine.SceneManagement;
 using System;
 using Random = UnityEngine.Random;
+using UnityEngine.Audio;
 
 public class GameManager : MonoBehaviour {
 
@@ -29,6 +30,9 @@ public class GameManager : MonoBehaviour {
     [SerializeField]
     private DetectorEnablingScript _LeftHandDetectors;
 
+    public AudioMixerSnapshot mainMixer;
+    public AudioMixerSnapshot gameMixer;
+
     private int _CurrentStage = 0;
     private int _EnnemiesRemaining = 0;
     private PlayerHealth _PlayerHealth;
@@ -42,6 +46,7 @@ public class GameManager : MonoBehaviour {
         StartCoroutine(StageLoop(0));
         _RightHandDetectors.EnableDetectors();
         _LeftHandDetectors.EnableDetectors();
+        PlayGameMusic();
     }
 
     public void BeginTutorial()
@@ -53,7 +58,7 @@ public class GameManager : MonoBehaviour {
 
     public void AbortGame()
     {
-
+        PlayMainMusic();
     }
 
     // Use this for initialization
@@ -62,6 +67,7 @@ public class GameManager : MonoBehaviour {
         _PlayerHealth = _Player.GetComponent<PlayerHealth>();
         _RightHandDetectors.DisableDetectors();
         _LeftHandDetectors.DisableDetectors();
+        PlayMainMusic();
     }
 
     private IEnumerator StageLoop(int stage)
@@ -165,5 +171,21 @@ public class GameManager : MonoBehaviour {
     public static void Reset()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    private void PlayMainMusic()
+    {
+        if(mainMixer && gameMixer)
+        {
+            mainMixer.TransitionTo(0.5f);
+        }
+    }
+
+    private void PlayGameMusic()
+    {
+        if (mainMixer && gameMixer)
+        {
+            gameMixer.TransitionTo(0.5f);
+        }
     }
 }
