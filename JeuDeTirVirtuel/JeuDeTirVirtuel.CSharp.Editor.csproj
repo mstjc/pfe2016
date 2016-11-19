@@ -152,6 +152,8 @@
     <None Include="Assets\DownloadedAssets\3DModel\Monster2\Shaders\monsterShader.shader" />
     <None Include="Assets\DownloadedAssets\3DModel\Monster2\Shaders\specillumShader.shader" />
     <None Include="Assets\DownloadedAssets\3DModel\ghoul\shader\ghoulshader.shader" />
+    <None Include="Assets\DownloadedAssets\Mirza Beig\Mirza Beig\VFX\Inferno\README.txt" />
+    <None Include="Assets\DownloadedAssets\Mirza Beig\_assets\Unity\Standard Assets\Environment\Water\Water\Shaders\FXWaterPro.shader" />
     <None Include="Assets\DownloadedAssets\Realistic Terrain Collection\Other\Effects\ImageEffects\Shaders\BlendModesOverlay.shader" />
     <None Include="Assets\DownloadedAssets\Realistic Terrain Collection\Other\Effects\ImageEffects\Shaders\BlurEffectConeTaps.shader" />
     <None Include="Assets\DownloadedAssets\Realistic Terrain Collection\Other\Effects\ImageEffects\Shaders\CameraMotionBlur.shader" />
