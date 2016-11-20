@@ -33,6 +33,10 @@ public class MonsterManager : MonoBehaviour {
     public event EventHandler Attack;
     public event EventHandler Died;
 
+    public float Health
+    {
+        get { return _CurrentHealth; }
+    }
 
     #region Fields
 

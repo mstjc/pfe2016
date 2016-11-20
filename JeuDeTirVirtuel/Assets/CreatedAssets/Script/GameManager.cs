@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour {
     [SerializeField]
     private GameObject _LastBoss;
     [SerializeField]
-    private GameObject _LastBossColumn;
+    private GameObject[] _LastBossColumn;
     [SerializeField]
     private GameObject _LastBossForcefield;
     [SerializeField]
@@ -78,63 +78,7 @@ public class GameManager : MonoBehaviour {
         _LeftHandDetectors.DisableDetectors();
         PlayMainMusic();
     }
-    private IEnumerator LastBoss()
-    {
-        Instantiate(_LastBoss, new Vector3(0, 4.5f, 40), Quaternion.AngleAxis(180, new Vector3(0, 1, 0)));
-        Instantiate(_LastBossColumn, new Vector3(-7, 12, 30), Quaternion.identity);
-        Instantiate(_LastBossColumn, new Vector3(7, 12, 30), Quaternion.identity);
-        Instantiate(_LastBossForcefield, new Vector3(0, 12, 30), Quaternion.identity);
-        yield return StartCoroutine(LastBossPhase(5,0));
-        yield return StartCoroutine(LastBossPhase(5,4));
-        yield return StartCoroutine(LastBossFinalPhase());
-        yield return StartCoroutine(LastBossDefeated());
-    }
-
-    private IEnumerator LastBossPhase(float spawnTime, int alienSpawnStartIndex )
-    {
-        _EnnemiesRemaining = 20;
-        _TimeBetweenSpawn = new WaitForSeconds(spawnTime);
-        _HUDUpdating.UpdateEnnemiesRemaining(_EnnemiesRemaining);
-        _LastBoss.GetComponent<LastBossMovement>().CanMove = true;
-        _LastBoss.GetComponent<LastBossShooter>().CanShoot = true;
-        if (_EnnemiesRemaining > 0)
-        {
-            InstantiateEnnemy();
-        }
-
-        for (int curFoes = 1; curFoes < _EnnemiesRemaining; curFoes++)
-        {
-            yield return _TimeBetweenSpawn;
-            InstantiateEnnemy();
-        }
-        while (_EnnemiesRemaining > 0)
-        {
-            // waiting for all enemies to be defeated.
-            yield return null;
-        }
-    }
-
-    private IEnumerator LastBossFinalPhase()
-    {
-        // Force field off, spawning skeleton only (slower spawn) boss moves in arc
-        _EnnemiesRemaining = 1;
-        _HUDUpdating.UpdateEnnemiesRemaining(_EnnemiesRemaining);
-        _TimeBetweenSpawn = new WaitForSeconds(3);
-        while (_EnnemiesRemaining > 0)
-        {
-            // waiting for Skrull to be defeated.
-            InstantiateEnnemy(4,false);
-            yield return _TimeBetweenSpawn;
-        }
-    }
-
-    private IEnumerator LastBossDefeated()
-    {
-        // Display a text congratulating the player for x seconds then reset the game;
-        yield return _CongratulationTime;
-        Reset();
-    }
-
+   
     private IEnumerator StageLoop(int stage)
     {
         _CurrentStage = stage;
@@ -205,77 +149,7 @@ public class GameManager : MonoBehaviour {
 
     private void InstantiateEnnemy()
     {
-        float horizon = 180F;
-        var radAngleRange = ((_FOVAngleDeg - horizon) /2) * Mathf.Deg2Rad;
-        var radHorizon = horizon * Mathf.Deg2Rad;
-        float angle = 0;
-        float x = 0;
-        float z = 0;
-        var alienIndex = Random.Range(0, _TypeOfEnnemisSpawning[_CurrentStage]);
-        bool occupiedSpace = true;
-        while(occupiedSpace)
-        {
-            angle = Random.Range(-radAngleRange, radAngleRange + radHorizon);
-            x = 40 * Mathf.Cos(angle);
-            z = 40 * Mathf.Sin(angle);
-            Vector3 pos = new Vector3(x, 0, z);
-            var hitColliders = Physics.OverlapSphere(pos, 2); // Biggest monster is 1.5x+1z and this is int only so 2
-            if (hitColliders.Length == 0)
-            {
-                occupiedSpace = false;
-            }
-        }
-        var alien = Instantiate(_Aliens[alienIndex], new Vector3(x, 0, z), Quaternion.identity) as GameObject;
-        var alienScript = alien.GetComponent(typeof(MonsterManager)) as MonsterManager;
-
-        if(alienScript != null)
-        {
-            alienScript.Died += OnAlienDead;
-            alienScript._Target = _Player;
-        }
-    }
-
-    private void InstantiateEnnemy(int startIndex, bool ennemiLifeMatters)
-    {
-        float bossAnglePlus = (30f + 90f) * Mathf.Deg2Rad;
-        float bossAngleMinus = (90f - 30f) * Mathf.Deg2Rad;
-        float middleAngle = (90f * Mathf.Deg2Rad);
-        float horizon = 180F;
-        var radAngleRange = ((_FOVAngleDeg - horizon) / 2) * Mathf.Deg2Rad;
-        var radHorizon = horizon * Mathf.Deg2Rad;
-        float angle = 0;
-        float x = 0;
-        float z = 0;
-        var alienIndex = Random.Range(startIndex, _Aliens.Length);
-        bool occupiedSpace = true;
-        while (occupiedSpace)
-        {
-            angle = Random.Range(-radAngleRange, radAngleRange + radHorizon);
-            if(angle <= bossAnglePlus && angle > bossAngleMinus)
-            {
-                if (angle < middleAngle)
-                    angle = angle - (middleAngle - angle);
-                else
-                    angle = angle + (angle + middleAngle);
-            }
-            x = 40 * Mathf.Cos(angle);
-            z = 40 * Mathf.Sin(angle);
-            Vector3 pos = new Vector3(x, 0, z);
-            var hitColliders = Physics.OverlapSphere(pos, 2); // Biggest monster is 1.5x+1z and this is int only so 2
-            if (hitColliders.Length == 0)
-            {
-                occupiedSpace = false;
-            }
-        }
-        var alien = Instantiate(_Aliens[alienIndex], new Vector3(x, 0, z), Quaternion.identity) as GameObject;
-        var alienScript = alien.GetComponent(typeof(MonsterManager)) as MonsterManager;
-
-        if (alienScript != null)
-        {
-            if(ennemiLifeMatters)
-                alienScript.Died += OnAlienDead;
-            alienScript._Target = _Player;
-        }
+        InstantiateEnnemy(0, _TypeOfEnnemisSpawning[_CurrentStage], true);
     }
 
     private void OnAlienDead(object sender, EventArgs e)
@@ -307,6 +181,121 @@ public class GameManager : MonoBehaviour {
         if (mainMixer && gameMixer)
         {
             gameMixer.TransitionTo(0.5f);
+        }
+    }
+
+    private IEnumerator LastBoss()
+    {
+        //Instantiate(_LastBoss, new Vector3(0, 4.5f, 40), Quaternion.AngleAxis(180, new Vector3(0, 1, 0)));
+        //Instantiate(_LastBossColumn, new Vector3(-7, 12, 30), Quaternion.identity);
+        //Instantiate(_LastBossColumn, new Vector3(7, 12, 30), Quaternion.identity);
+        //Instantiate(_LastBossForcefield, new Vector3(0, 12, 30), Quaternion.identity);
+
+        _LastBoss.gameObject.SetActive(true);
+        _LastBossForcefield.gameObject.SetActive(true);
+        for(int i=0; i<_LastBossColumn.Length; i++)
+        {
+            _LastBossColumn[i].SetActive(true);
+        }
+        yield return StartCoroutine(LastBossPhase(5, 0));
+        yield return StartCoroutine(LastBossPhase(5, 4));
+        yield return StartCoroutine(LastBossFinalPhase());
+        yield return StartCoroutine(LastBossDefeated());
+    }
+
+    private IEnumerator LastBossPhase(float spawnTime, int alienSpawnStartIndex)
+    {
+        _EnnemiesRemaining = 20;
+        _TimeBetweenSpawn = new WaitForSeconds(spawnTime);
+        _HUDUpdating.UpdateEnnemiesRemaining(_EnnemiesRemaining);
+        if (_EnnemiesRemaining > 0)
+        {
+            InstantiateEnnemy(alienSpawnStartIndex, _Aliens.Length, true);
+        }
+
+        for (int curFoes = 1; curFoes < _EnnemiesRemaining; curFoes++)
+        {
+            yield return _TimeBetweenSpawn;
+            InstantiateEnnemy(alienSpawnStartIndex, _Aliens.Length, true);
+        }
+        while (_EnnemiesRemaining > 0)
+        {
+            // waiting for all enemies to be defeated.
+            yield return null;
+        }
+    }
+
+    private IEnumerator LastBossFinalPhase()
+    {
+        // Force field off, spawning skeleton only (slower spawn) boss moves in arc
+        _EnnemiesRemaining = 1;
+        _LastBoss.GetComponent<LastBossMovement>().CanMove = true;
+        _LastBoss.GetComponent<LastBossShooter>().CanShoot = true;
+        _LastBossForcefield.gameObject.SetActive(false);
+        var alienScript = _LastBoss.GetComponent(typeof(MonsterManager)) as MonsterManager;
+
+        if (alienScript != null)
+        {
+
+            alienScript.Died += OnAlienDead;
+            alienScript._Target = _Player;
+        }
+        _HUDUpdating.UpdateEnnemiesRemaining(_EnnemiesRemaining);
+        _TimeBetweenSpawn = new WaitForSeconds(5);
+        while (_LastBoss.GetComponent<MonsterManager>().Health > 0)
+        {
+            // waiting for Skrull to be defeated.
+            InstantiateEnnemy(4, _Aliens.Length, false);
+            ++_EnnemiesRemaining;
+            _HUDUpdating.UpdateEnnemiesRemaining(_EnnemiesRemaining);
+            yield return _TimeBetweenSpawn;
+        }
+        while (_EnnemiesRemaining > 0)
+        {
+            // waiting for all enemies to be defeated.
+            yield return null;
+        }
+    }
+
+    private IEnumerator LastBossDefeated()
+    {
+        // Display a text congratulating the player for x seconds then reset the game;
+        yield return _CongratulationTime;
+        Reset();
+    }
+
+    private void InstantiateEnnemy(int startIndex, int endIndex, bool ennemiLifeMatters)
+    {
+        float horizon = 180F;
+        var radAngleRange = ((_FOVAngleDeg - horizon) / 2) * Mathf.Deg2Rad;
+        var radHorizon = horizon * Mathf.Deg2Rad;
+        float angle = 0;
+        float x = 0;
+        float z = 0;
+        var alienIndex = Random.Range(startIndex, endIndex);
+        bool occupiedSpace = true;
+        while (occupiedSpace)
+        {
+            angle = Random.Range(-radAngleRange, radAngleRange + radHorizon);
+            x = 40 * Mathf.Cos(angle);
+            z = 40 * Mathf.Sin(angle);
+            Vector3 pos = new Vector3(x, 0, z);
+            var hitColliders = Physics.OverlapSphere(pos, 2); // Biggest monster is 1.5x+1z and this is int only so 2
+            if (hitColliders.Length == 0)
+            {
+                occupiedSpace = false;
+            }
+        }
+        var alien = Instantiate(_Aliens[alienIndex], new Vector3(x, 0, z), Quaternion.identity) as GameObject;
+        var alienScript = alien.GetComponent(typeof(MonsterManager)) as MonsterManager;
+
+        if (alienScript != null)
+        {
+            if(ennemiLifeMatters)
+            {
+                alienScript.Died += OnAlienDead;
+            }
+            alienScript._Target = _Player;
         }
     }
 }
