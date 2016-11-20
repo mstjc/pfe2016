@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour {
     [SerializeField]
     private GameObject _LastBoss;
     [SerializeField]
-    private GameObject _LastBossColumn;
+    private GameObject[] _LastBossColumn;
     [SerializeField]
     private GameObject _LastBossForcefield;
     [SerializeField]
@@ -191,6 +191,12 @@ public class GameManager : MonoBehaviour {
         //Instantiate(_LastBossColumn, new Vector3(7, 12, 30), Quaternion.identity);
         //Instantiate(_LastBossForcefield, new Vector3(0, 12, 30), Quaternion.identity);
 
+        _LastBoss.gameObject.SetActive(true);
+        _LastBossForcefield.gameObject.SetActive(true);
+        for(int i=0; i<_LastBossColumn.Length; i++)
+        {
+            _LastBossColumn[i].SetActive(true);
+        }
         yield return StartCoroutine(LastBossPhase(5, 0));
         yield return StartCoroutine(LastBossPhase(5, 4));
         yield return StartCoroutine(LastBossFinalPhase());
@@ -226,6 +232,14 @@ public class GameManager : MonoBehaviour {
         _LastBoss.GetComponent<LastBossMovement>().CanMove = true;
         _LastBoss.GetComponent<LastBossShooter>().CanShoot = true;
         _LastBossForcefield.gameObject.SetActive(false);
+        var alienScript = _LastBoss.GetComponent(typeof(MonsterManager)) as MonsterManager;
+
+        if (alienScript != null)
+        {
+
+            alienScript.Died += OnAlienDead;
+            alienScript._Target = _Player;
+        }
         _HUDUpdating.UpdateEnnemiesRemaining(_EnnemiesRemaining);
         _TimeBetweenSpawn = new WaitForSeconds(5);
         while (_LastBoss.GetComponent<MonsterManager>().Health > 0)
