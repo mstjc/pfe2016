@@ -1,13 +1,29 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class LastBossShooter : TimedShooter
+public class LastBossShooter : StandardShooter
 {
-	
-	protected override void Start ()
+
+    public bool BossPhaseStarted
+    {
+        get;
+        set;
+    }
+
+    protected override void Start ()
     {
         base.Start();
-        CanShoot = false;
+        BossPhaseStarted = false;
 	}
 
+    public override void Shoot(Vector3 direction)
+    {
+        if (BossPhaseStarted)
+            base.Shoot(direction);
+    }
+
+    protected override void FixedUpdate()
+    {
+        if (BossPhaseStarted)
+            base.FixedUpdate();
+    }
 }

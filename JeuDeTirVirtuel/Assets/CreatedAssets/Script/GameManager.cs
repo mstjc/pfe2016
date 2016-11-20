@@ -191,6 +191,15 @@ public class GameManager : MonoBehaviour {
         //Instantiate(_LastBossColumn, new Vector3(7, 12, 30), Quaternion.identity);
         //Instantiate(_LastBossForcefield, new Vector3(0, 12, 30), Quaternion.identity);
 
+        
+        var alienScript = _LastBoss.GetComponent(typeof(MonsterManager)) as MonsterManager;
+
+        if (alienScript != null)
+        {
+
+            alienScript.Died += OnAlienDead;
+            alienScript._Target = _Player;
+        }
         _LastBoss.gameObject.SetActive(true);
         _LastBossForcefield.gameObject.SetActive(true);
         for(int i=0; i<_LastBossColumn.Length; i++)
@@ -205,7 +214,7 @@ public class GameManager : MonoBehaviour {
 
     private IEnumerator LastBossPhase(float spawnTime, int alienSpawnStartIndex)
     {
-        _EnnemiesRemaining = 20;
+        _EnnemiesRemaining = 2;
         _TimeBetweenSpawn = new WaitForSeconds(spawnTime);
         _HUDUpdating.UpdateEnnemiesRemaining(_EnnemiesRemaining);
         if (_EnnemiesRemaining > 0)
@@ -229,23 +238,16 @@ public class GameManager : MonoBehaviour {
     {
         // Force field off, spawning skeleton only (slower spawn) boss moves in arc
         _EnnemiesRemaining = 1;
-        _LastBoss.GetComponent<LastBossMovement>().CanMove = true;
-        _LastBoss.GetComponent<LastBossShooter>().CanShoot = true;
+        _LastBoss.GetComponent<LastBossMovement>().BossPhaseStarted = true;
+        _LastBoss.GetComponent<LastBossShooter>().BossPhaseStarted = true;
         _LastBossForcefield.gameObject.SetActive(false);
-        var alienScript = _LastBoss.GetComponent(typeof(MonsterManager)) as MonsterManager;
 
-        if (alienScript != null)
-        {
-
-            alienScript.Died += OnAlienDead;
-            alienScript._Target = _Player;
-        }
         _HUDUpdating.UpdateEnnemiesRemaining(_EnnemiesRemaining);
         _TimeBetweenSpawn = new WaitForSeconds(5);
-        while (_LastBoss.GetComponent<MonsterManager>().Health > 0)
+        while (_LastBoss != null)
         {
             // waiting for Skrull to be defeated.
-            InstantiateEnnemy(4, _Aliens.Length, false);
+            InstantiateEnnemy(4, _Aliens.Length, true);
             ++_EnnemiesRemaining;
             _HUDUpdating.UpdateEnnemiesRemaining(_EnnemiesRemaining);
             yield return _TimeBetweenSpawn;

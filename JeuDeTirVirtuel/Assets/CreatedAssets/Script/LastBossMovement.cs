@@ -22,6 +22,12 @@ public class LastBossMovement : MovementBase
     [SerializeField]
     private float _MaxMovingFreq;
 
+    public bool BossPhaseStarted
+    {
+        get;
+        set;
+    }
+
     #endregion
 
     #region Properties
@@ -51,7 +57,7 @@ public class LastBossMovement : MovementBase
     public override void Start()
     {
         base.Start();
-        CanMove = false;
+        BossPhaseStarted = false;
         // We set a start position
         _UpperLimit = 180f * Mathf.Deg2Rad;
         _LowerLimit = 0f * Mathf.Deg2Rad;
@@ -92,7 +98,7 @@ public class LastBossMovement : MovementBase
     public override void Move()
     {
         base.Move();
-        if (CanMove)
+        if (CanMove && BossPhaseStarted)
         {
             if (!_Moving)
             {

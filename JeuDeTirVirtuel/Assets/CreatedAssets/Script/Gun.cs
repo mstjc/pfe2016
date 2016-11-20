@@ -255,8 +255,12 @@ public class Gun : MonoBehaviour {
     private IEnumerator DropBullet(Rigidbody shell)
     {
         yield return new WaitForSeconds(UnityEngine.Random.Range(0, 0.05f));
-        shell.transform.parent = null;
-        shell.isKinematic = false;
+        if(shell != null)
+        {
+            shell.transform.parent = null;
+            shell.isKinematic = false;
+        }
+
     }
 
     private IEnumerator FinishReloading()
