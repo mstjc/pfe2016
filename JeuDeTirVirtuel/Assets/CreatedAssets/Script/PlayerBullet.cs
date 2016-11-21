@@ -29,6 +29,11 @@ public class PlayerBullet : BulletBase {
             PlayBulletImpact();
             Destroy(gameObject);
         }
+        else if(other.GetComponent<Wall>())
+        {
+            gameObject.GetComponent<SphereCollider>().isTrigger = false;
+            Destruct();
+        }
         else if (other.name.Equals("Terrain")) 
         {
             PlayGroundImpact();

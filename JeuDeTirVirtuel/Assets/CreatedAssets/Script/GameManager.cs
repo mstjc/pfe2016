@@ -32,6 +32,8 @@ public class GameManager : MonoBehaviour {
     [SerializeField]
     private HUDUpdating _HUDUpdating;
     [SerializeField]
+    private RectTransform _CongratulationText;
+    [SerializeField]
     private DetectorEnablingScript _RightHandDetectors;
     [SerializeField]
     private DetectorEnablingScript _LeftHandDetectors;
@@ -262,6 +264,7 @@ public class GameManager : MonoBehaviour {
     private IEnumerator LastBossDefeated()
     {
         // Display a text congratulating the player for x seconds then reset the game;
+        _CongratulationText.gameObject.SetActive(true);
         yield return _CongratulationTime;
         Reset();
     }

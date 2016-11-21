@@ -19,7 +19,6 @@ public class MonsterBullet : BulletBase {
         PlayerHealth player = other.GetComponent<PlayerHealth>();
         if (other.GetComponent<Shield>())
         {
-            // Fuck yeah
             PlayMetalImpact();
             gameObject.GetComponent<SphereCollider>().isTrigger = false;
             Destruct();
