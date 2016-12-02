@@ -57,11 +57,11 @@ public abstract class BulletBase : MonoBehaviour, IBullet {
         Destroy(gameObject);
     }
 
-    public void PlayBulletImpact()
+    public void PlayBulletImpact(float volume)
     {
         if(_Mixer != null && _BulletImpact != null)
         {
-            SoundUtil.PlayClipAtPoint(_BulletImpact, _Mixer, gameObject.transform.position, 0.5f, 1.0f);
+			SoundUtil.PlayClipAtPoint(_BulletImpact, _Mixer, gameObject.transform.position, volume, 1.0f);
         }
     }
 

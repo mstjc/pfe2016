@@ -24,15 +24,10 @@ public class PlayerBullet : BulletBase {
             PlayFleshImpact(1.0f);
             Destroy(gameObject);
         }
-        else if (other.GetComponent<MonsterBullet>())
+        else if (other.GetComponent<MonsterBullet>() || other.GetComponent<Wall>())
         {
-            PlayBulletImpact();
+            PlayBulletImpact(1.0f);
             Destroy(gameObject);
-        }
-        else if(other.GetComponent<Wall>())
-        {
-            gameObject.GetComponent<SphereCollider>().isTrigger = false;
-            Destruct();
         }
         else if (other.name.Equals("Terrain")) 
         {

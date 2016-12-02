@@ -279,17 +279,20 @@ public class GameManager : MonoBehaviour {
         float z = 0;
         var alienIndex = Random.Range(startIndex, endIndex);
         bool occupiedSpace = true;
-        while (occupiedSpace)
+		int searchCount = 0;
+        while (occupiedSpace && searchCount <= 5)
         {
             angle = Random.Range(-radAngleRange, radAngleRange + radHorizon);
             x = 40 * Mathf.Cos(angle);
             z = 40 * Mathf.Sin(angle);
-            Vector3 pos = new Vector3(x, 0, z);
+            Vector3 pos = new Vector3(x, 4, z);
             var hitColliders = Physics.OverlapSphere(pos, 2); // Biggest monster is 1.5x+1z and this is int only so 2
-            if (hitColliders.Length == 0)
+            if (hitColliders.Length <= 1)
             {
                 occupiedSpace = false;
             }
+
+			++searchCount;
         }
         var alien = Instantiate(_Aliens[alienIndex], new Vector3(x, 0, z), Quaternion.identity) as GameObject;
         var alienScript = alien.GetComponent(typeof(MonsterManager)) as MonsterManager;

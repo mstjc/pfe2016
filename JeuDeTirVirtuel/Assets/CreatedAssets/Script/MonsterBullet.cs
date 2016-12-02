@@ -26,7 +26,7 @@ public class MonsterBullet : BulletBase {
         else if (other.GetComponent<PlayerBullet>())
         {
             TakeDamage();
-            PlayBulletImpact();
+            PlayBulletImpact(0.5f);
         }
         else if(player)
         {

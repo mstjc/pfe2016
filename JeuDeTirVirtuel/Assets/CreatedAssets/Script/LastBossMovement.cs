@@ -56,7 +56,6 @@ public class LastBossMovement : MovementBase
 
     public override void Start()
     {
-        base.Start();
         BossPhaseStarted = false;
         // We set a start position
         _UpperLimit = 180f * Mathf.Deg2Rad;
