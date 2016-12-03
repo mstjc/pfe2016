@@ -40,8 +40,9 @@ public class GameManager : MonoBehaviour {
 
     public AudioMixerSnapshot mainMixer;
     public AudioMixerSnapshot gameMixer;
+	public AudioMixerSnapshot bossMixer;
 
-    private int _CurrentStage = 0;
+	private int _CurrentStage = 0;
     private int _EnnemiesRemaining = 0;
     private PlayerHealth _PlayerHealth;
     private float _CongratulationTimeFloat = 5f;
@@ -85,7 +86,6 @@ public class GameManager : MonoBehaviour {
     {
         _CurrentStage = stage;
         _HUDUpdating.UpdateStage(_CurrentStage + 1);
-        //_HUDUpdating.UpdateEnnemiesRemaining(_EnnemiesRemaining);
 
 
         yield return StartCoroutine(StageStarting(stage));
@@ -186,15 +186,19 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-    private IEnumerator LastBoss()
-    {
-        //Instantiate(_LastBoss, new Vector3(0, 4.5f, 40), Quaternion.AngleAxis(180, new Vector3(0, 1, 0)));
-        //Instantiate(_LastBossColumn, new Vector3(-7, 12, 30), Quaternion.identity);
-        //Instantiate(_LastBossColumn, new Vector3(7, 12, 30), Quaternion.identity);
-        //Instantiate(_LastBossForcefield, new Vector3(0, 12, 30), Quaternion.identity);
+	private void PlayLastBossMusic()
+	{
+		if (mainMixer && bossMixer)
+		{
+			bossMixer.TransitionTo(1);
+		}
+	}
 
-        
-        var alienScript = _LastBoss.GetComponent(typeof(MonsterManager)) as MonsterManager;
+	private IEnumerator LastBoss()
+    {
+		PlayLastBossMusic();
+
+		var alienScript = _LastBoss.GetComponent(typeof(MonsterManager)) as MonsterManager;
 
         if (alienScript != null)
         {

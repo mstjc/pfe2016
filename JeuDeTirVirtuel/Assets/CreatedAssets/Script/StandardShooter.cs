@@ -16,7 +16,7 @@ public class StandardShooter : TimedShooter {
         if (CanShoot && _Bullet != null)
         {
             var initPos = transform.position + transform.forward*5;
-            initPos.y += 5.0f;
+            initPos.y += 3.4f;
             Rigidbody shot = Instantiate(_Bullet, initPos, transform.rotation) as Rigidbody;
             shot.AddForce(transform.forward * _ForceApplied);
         }

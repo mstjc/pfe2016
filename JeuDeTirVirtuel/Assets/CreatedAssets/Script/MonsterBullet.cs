@@ -7,9 +7,10 @@ public class MonsterBullet : BulletBase {
     [SerializeField]
     private int _Health;
 
-    private float _CheckTime = 0.0f;
+	private float _CheckTime = 0.0f;
+	private bool _CloseToPlayer = false;
 
-    public override void Start()
+	public override void Start()
     {
         base.Start();
     }
@@ -20,8 +21,7 @@ public class MonsterBullet : BulletBase {
         if (other.GetComponent<Shield>())
         {
             PlayMetalImpact();
-            gameObject.GetComponent<SphereCollider>().isTrigger = false;
-            Destruct();
+			Destruct();
         }
         else if (other.GetComponent<PlayerBullet>())
         {
@@ -47,6 +47,17 @@ public class MonsterBullet : BulletBase {
             }
         }
     }
+
+	public override void FixedUpdate()
+	{
+		base.FixedUpdate();
+
+		if (!_CloseToPlayer && (Mathf.Abs(gameObject.transform.position.x) + gameObject.transform.position.z) < 10)
+		{
+			gameObject.GetComponent<SphereCollider>().isTrigger = false;
+			_CloseToPlayer = true;
+		}
+	}
 
     private void TakeDamage()
     {

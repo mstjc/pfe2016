@@ -26,7 +26,12 @@ public abstract class BulletBase : MonoBehaviour, IBullet {
 
     }
 
-    public virtual void Destruct()
+	public virtual void FixedUpdate()
+	{
+
+	}
+
+	public virtual void Destruct()
     {
         _Destructing = true;
         GetComponent<Rigidbody>().useGravity = true;
@@ -48,7 +53,10 @@ public abstract class BulletBase : MonoBehaviour, IBullet {
 
     protected virtual void OnCollisionEnter(Collision collision)
     {
-        Destruct();
+		if(!gameObject.GetComponent<Collider>().isTrigger)
+		{
+			OnTriggerEnter(collision.collider);
+		}
     }
 
     private IEnumerator StartDestruction()
