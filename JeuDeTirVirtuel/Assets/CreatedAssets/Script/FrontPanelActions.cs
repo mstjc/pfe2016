@@ -41,7 +41,7 @@ public class FrontPanelActions : MonoBehaviour {
     {
         SetMainMenuVisibility(false);
         SetTutorialVisibility(true);
-        _HUD.gameObject.SetActive(true);
+        _HUD.gameObject.SetActive(false);
         _ExitButton.gameObject.SetActive(true);
         _GM.BeginTutorial();
     }

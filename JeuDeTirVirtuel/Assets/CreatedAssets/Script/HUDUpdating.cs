@@ -15,7 +15,12 @@ public class HUDUpdating : MonoBehaviour {
         _CurrentStageText.text = stage.ToString();
     }
 
-    public void UpdateEnnemiesRemaining(int ennemies)
+	public void UpdateStage(string stage)
+	{
+		_CurrentStageText.text = stage;
+	}
+
+	public void UpdateEnnemiesRemaining(int ennemies)
     {
         _EnnemiesRemainingText.text = ennemies.ToString();
     }

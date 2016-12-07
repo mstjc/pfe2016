@@ -41,6 +41,7 @@ public class GameManager : MonoBehaviour {
     public AudioMixerSnapshot mainMixer;
     public AudioMixerSnapshot gameMixer;
 	public AudioMixerSnapshot bossMixer;
+	public AudioSource _StageEndingAudioSource;
 
 	private int _CurrentStage = 0;
     private int _EnnemiesRemaining = 0;
@@ -147,6 +148,11 @@ public class GameManager : MonoBehaviour {
             yield return null;
         }
         _PlayerHealth.RefillHealth();
+		if(_StageEndingAudioSource != null)
+		{
+			_StageEndingAudioSource.enabled = true;
+			_StageEndingAudioSource.Play();
+		}
     }
 
     private void InstantiateEnnemy()
@@ -197,7 +203,7 @@ public class GameManager : MonoBehaviour {
 	private IEnumerator LastBoss()
     {
 		PlayLastBossMusic();
-
+		_HUDUpdating.UpdateStage("Boss");
 		var alienScript = _LastBoss.GetComponent(typeof(MonsterManager)) as MonsterManager;
 
         if (alienScript != null)
@@ -220,7 +226,7 @@ public class GameManager : MonoBehaviour {
 
     private IEnumerator LastBossPhase(float spawnTime, int alienSpawnStartIndex)
     {
-        _EnnemiesRemaining = 2;
+        _EnnemiesRemaining = 4;
         _TimeBetweenSpawn = new WaitForSeconds(spawnTime);
         _HUDUpdating.UpdateEnnemiesRemaining(_EnnemiesRemaining);
         if (_EnnemiesRemaining > 0)
