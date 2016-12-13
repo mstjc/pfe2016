@@ -73,7 +73,6 @@ public class GameManager : MonoBehaviour {
         PlayMainMusic();
     }
 
-    // Use this for initialization
     void Start () {
         _StartOfStageWait = new WaitForSeconds(_StartOfStageWaitTime);
         _CongratulationTime = new WaitForSeconds(_CongratulationTimeFloat);
@@ -218,6 +217,7 @@ public class GameManager : MonoBehaviour {
         {
             _LastBossColumn[i].SetActive(true);
         }
+        // The boss has 3 phases.
         yield return StartCoroutine(LastBossPhase(5, 0));
         yield return StartCoroutine(LastBossPhase(5, 4));
         yield return StartCoroutine(LastBossFinalPhase());
@@ -296,7 +296,7 @@ public class GameManager : MonoBehaviour {
             x = 40 * Mathf.Cos(angle);
             z = 40 * Mathf.Sin(angle);
             Vector3 pos = new Vector3(x, 4, z);
-            var hitColliders = Physics.OverlapSphere(pos, 2); // Biggest monster is 1.5x+1z and this is int only so 2
+            var hitColliders = Physics.OverlapSphere(pos, 2); // Biggest monster is 1.5x+1z and this is int only so 2 is the largest value
             if (hitColliders.Length <= 1)
             {
                 occupiedSpace = false;

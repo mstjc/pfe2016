@@ -17,7 +17,7 @@ public class PlayerBullet : BulletBase {
     protected override void OnTriggerEnter(Collider other)
     {
         MonsterManager monsterHealth = other.GetComponent<MonsterManager>();
-
+        // We check which collision occured
         if (monsterHealth)
         {
             monsterHealth.TakeDamage(_Damage);

@@ -30,12 +30,12 @@ public abstract class ShooterBase : MonoBehaviour, IShooter {
 
     public event EventHandler Fired;
 
-    // Use this for initialization
+
     protected virtual void Start () {
         _Anim = GetComponent<Animator>();
     }
 	
-	// Update is called once per frame
+
 	protected virtual void Update () {
 	
 	}
@@ -48,7 +48,7 @@ public abstract class ShooterBase : MonoBehaviour, IShooter {
     public virtual void Shoot(Vector3 direction)
     {
         OnFired();
-        // empty
+
     }
 
     public void OnFired()

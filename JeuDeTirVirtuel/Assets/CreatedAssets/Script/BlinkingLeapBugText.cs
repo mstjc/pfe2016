@@ -13,7 +13,6 @@ public class BlinkingLeapBugText : MonoBehaviour {
 
     void OnActivate()
     {
-        //StartCoroutine(FlashLabel());
     }
 	
 	void Start ()
@@ -21,7 +20,6 @@ public class BlinkingLeapBugText : MonoBehaviour {
         StartCoroutine(FlashLabel());
     }
 	
-	// Update is called once per frame
 	void Update ()
     {
 	

@@ -19,7 +19,7 @@ public class RandomTimer {
     }
 
 	
-	// Update is called once per frame
+
 	public void Update (float delta) {
         if(Started)
         {

@@ -40,6 +40,7 @@ public abstract class BulletBase : MonoBehaviour, IBullet {
 
     public virtual bool IsLost()
     {
+        // Check if a bullet has left the area.
         return Mathf.Abs(transform.position.x) > _MaxRange || Mathf.Abs(transform.position.z) > _MaxRange;
     }
 

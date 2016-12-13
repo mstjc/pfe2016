@@ -131,7 +131,6 @@ public class Gun : MonoBehaviour {
 
                 OnFired();
 
-                // TODO
                 if (_NbBullets <= 0)
                 {
                     _IsReloaded = false;
@@ -140,7 +139,6 @@ public class Gun : MonoBehaviour {
             }
             else
             {
-                //OnTick();
                 Reload();
             }
         }

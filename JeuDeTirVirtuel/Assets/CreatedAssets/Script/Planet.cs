@@ -12,12 +12,12 @@ public class Planet : MonoBehaviour {
     [SerializeField]
     private float _Speed = 10F;
 
-	// Use this for initialization
+
 	void Start () {
 	
 	}
 	
-	// Update is called once per frame
+
 	void Update () {
 
         transform.RotateAround(_RotateAround ? _RotateAround.transform.position : Vector3.zero, _Direction, _Speed * Time.deltaTime);

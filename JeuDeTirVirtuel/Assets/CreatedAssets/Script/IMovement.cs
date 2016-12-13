@@ -40,19 +40,11 @@ public interface IMovement {
 
     #region Methods
 
-    /// <summary>
-    /// Look at the target
-    /// </summary>
     void LookAtTarget();
 
-    /// <summary>
-    /// Move to the initial position
-    /// </summary>
     void MoveToInitialPosition();
 
-    /// <summary>
-    /// Move in the direction
-    /// </summary>
+
     void Move();
 
     #endregion
